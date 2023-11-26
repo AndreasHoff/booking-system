@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const showMenu = () => {
@@ -21,15 +22,15 @@ const AdminDashboard = () => {
     <div className='container'>
       <aside>
         <div className='toggle'>
-          <div className='logo'>
-            <img
-              src='/images/logo.png'
-              alt=''
-            />
-            <h2>
-              PFA<span className='danger'>Pension</span>
-            </h2>
+        <Link to='/'>
+            <div className='logo'>
+                <img
+                    src='/images/logo.png'
+                    alt=''
+                />
+            <h2>PFA<span className='danger'>Pension</span></h2>
           </div>
+        </Link>
           <div
             className='close'
             id='close-btn'
