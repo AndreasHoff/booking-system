@@ -33,3 +33,9 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+.error-text {
+    color: #ff0000;
+    /* Red color for error text */
+    margin-top: 5px;
+}
