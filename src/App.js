@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import AdminDashboard from './pages/AdminDashboard';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
             </Routes>
         </div>
       
