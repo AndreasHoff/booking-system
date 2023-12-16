@@ -1,12 +1,16 @@
 // Register.js
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/register.css';
 
 const Register = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatchError, setPasswordMatchError] = useState(false);
+    const [registrationError, setRegistrationError] = useState(null);
 
     const register = async (e) => {
         e.preventDefault();
@@ -17,9 +21,22 @@ const Register = () => {
             return;
         }
 
-        // Implement registration with Firebase here
-        // For now, you can console.log or perform any other action
-        console.log('Registration form submitted');
+        const auth = getAuth();
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed up 
+            const user = userCredential.user;
+            // ...
+            console.log(user);
+            navigate('/admin-dashboard');
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+            setRegistrationError(error.message);
+            console.log(errorCode, errorMessage)
+        });
     };
 
     return (
@@ -43,6 +60,7 @@ const Register = () => {
                     />
                 </label>
                 {passwordMatchError && <p className="error-text">Passwords do not match.</p>}
+                {registrationError && <p className="error-text">{registrationError}</p>}
                 <button type="submit">Register</button>
             </form>
         </div>
