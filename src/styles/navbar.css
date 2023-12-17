@@ -18,6 +18,10 @@
     float: left;
 }
 
+.navbar-item-right {
+    float: right;
+}
+
 .navbar-link {
     display: block;
     color: white;

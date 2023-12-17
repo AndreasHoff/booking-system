@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { auth } from '../firebase';
 import '../styles/login.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    const login = async (e) => {
+    const login = (e) => {
         e.preventDefault();
-        // Implement login with Firebase here
+        signInWithEmailAndPassword( auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log(user);
+            navigate('/admin-dashboard');
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // Handle errors here
+            console.log(errorCode, errorMessage);
+        });
     };
 
     return (
@@ -24,7 +40,6 @@ const Login = () => {
                 </label>
                 <button type="submit">Login</button>
             </form>
-            <p>Not a user yet? <Link to="/register">Sign up here</Link></p>
         </div>
     );
 };
