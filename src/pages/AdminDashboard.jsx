@@ -1,7 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                navigate('/login');
+            }
+        });
+        return () => unsubscribe();
+    }, [navigate]);
     const showMenu = () => {
         const sideMenu = document.querySelector('aside');
         sideMenu.style.display = 'block';
