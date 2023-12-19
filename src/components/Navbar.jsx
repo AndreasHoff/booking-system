@@ -11,7 +11,7 @@ const Navbar = () => {
 
     const logout = () => {
         signOut(auth).then(() => {
-            navigate('/');
+            navigate('/login');
             console.log('logout succesfully')
         }).catch((error) => {
             console.log(error)

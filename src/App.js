@@ -1,5 +1,6 @@
-import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import Navbar from './components/Navbar';
 import AdminDashboard from './pages/AdminDashboard';
@@ -8,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 const App = () => {
+
     return (
         <Router>
             <Navbar />
@@ -19,6 +21,7 @@ const App = () => {
                     <Route path="/register" element={<Register />} />
                 </Routes>
             </div>
+            <ToastContainer />
         </Router>
     );
 };

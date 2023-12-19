@@ -1,19 +1,27 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { auth } from '../firebase';
 
 const AdminDashboard = () => {
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (!user) {
+            if (user) {
+                setUser(user);
+            } else {
+                toast.error('Not verified - redirecting');
                 navigate('/login');
             }
         });
+
         return () => unsubscribe();
     }, [navigate]);
+
     const showMenu = () => {
         const sideMenu = document.querySelector('aside');
         sideMenu.style.display = 'block';
@@ -33,7 +41,10 @@ const AdminDashboard = () => {
 
     return (
         <div className='container'>
-            <aside>
+            <ToastContainer />
+            {user ? (
+                <>
+                <aside>
                 <div className='toggle'>
                     <Link to='/'>
                         <div className='logo'>
@@ -99,7 +110,7 @@ const AdminDashboard = () => {
                         <h3>Logout</h3>
                     </a>
                 </div>
-            </aside>
+                </aside>
 
             <main>
                 <h1>Analytics</h1>
@@ -311,6 +322,9 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             </div>
+            </>
+            ) : null}
+                
         </div>
     );
 };

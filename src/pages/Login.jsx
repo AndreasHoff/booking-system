@@ -1,6 +1,7 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { auth } from '../firebase';
 import '../styles/login.css';
 
@@ -13,6 +14,7 @@ const Login = () => {
         e.preventDefault();
         signInWithEmailAndPassword( auth, email, password)
         .then((userCredential) => {
+            toast.success('Login Successful');
             // Signed in 
             const user = userCredential.user;
             console.log(user);
