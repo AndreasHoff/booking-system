@@ -1,11 +1,9 @@
 import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { auth } from '../firebase';
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ setAttemptedAccess }) => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
@@ -14,13 +12,12 @@ const AdminDashboard = () => {
             if (user) {
                 setUser(user);
             } else {
-                toast.error('Not verified - redirecting');
                 navigate('/login');
             }
-        });
+        }, []);
 
         return () => unsubscribe();
-    }, [navigate]);
+    }, [navigate, setAttemptedAccess]);
 
     const showMenu = () => {
         const sideMenu = document.querySelector('aside');
@@ -41,7 +38,6 @@ const AdminDashboard = () => {
 
     return (
         <div className='container'>
-            <ToastContainer />
             {user ? (
                 <>
                 <aside>

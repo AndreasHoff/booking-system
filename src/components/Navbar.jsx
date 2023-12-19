@@ -21,12 +21,12 @@ const Navbar = () => {
     return (
         <nav className='navbar'>
             <ul className='navbar-list'>
-                <li className='navbar-item'>
+                {/* <li className='navbar-item'>
                     <Link to='/' className='navbar-link'>Home</Link>
-                </li>
-                <li className='navbar-item'>
+                </li> */}
+                {/* <li className='navbar-item'>
                     <Link to='/admin-dashboard' className='navbar-link'>Admin Dashboard</Link>
-                </li>
+                </li> */}
                 {!user && (
                     <>
                         <li className='navbar-item'>

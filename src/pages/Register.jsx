@@ -14,13 +14,13 @@ const Register = () => {
 
     const register = async (e) => {
         e.preventDefault();
-
+    
         // Check if passwords match
         if (password !== confirmPassword) {
             setPasswordMatchError(true);
             return;
         }
-
+    
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
