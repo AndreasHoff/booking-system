@@ -3,12 +3,15 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { auth } from '../firebase';
 
-const ToastManager = ({ justRegistered }) => {
+const ToastManager = () => {
     useEffect(() => {
         let prevUser = null;
 
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user && !prevUser) {
+                const justRegistered =
+                    user.metadata.creationTime === user.metadata.lastSignInTime;
+
                 if (justRegistered) {
                     toast.success('Registration successful', { autoClose: 1000 });
                 } else {
@@ -22,7 +25,7 @@ const ToastManager = ({ justRegistered }) => {
         });
 
         return () => unsubscribe();
-    }, [justRegistered]);
+    }, []);
 
     return null;
 };
