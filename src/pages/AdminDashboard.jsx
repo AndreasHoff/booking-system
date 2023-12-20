@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 
-const AdminDashboard = ({ setAttemptedAccess }) => {
+const AdminDashboard = () => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
@@ -12,12 +12,13 @@ const AdminDashboard = ({ setAttemptedAccess }) => {
             if (user) {
                 setUser(user);
             } else {
+                console.log('user not logged in')
                 navigate('/login');
             }
         }, []);
 
         return () => unsubscribe();
-    }, [navigate, setAttemptedAccess]);
+    }, [navigate]);
 
     const showMenu = () => {
         const sideMenu = document.querySelector('aside');
@@ -320,7 +321,6 @@ const AdminDashboard = ({ setAttemptedAccess }) => {
             </div>
             </>
             ) : null}
-                
         </div>
     );
 };

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/register.css';
 
-const Register = ({ setJustRegistered }) => {
+const Register = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -28,7 +28,6 @@ const Register = ({ setJustRegistered }) => {
             // ...
             console.log(user)
             console.log('registration succesful');
-            setJustRegistered(true);
             navigate('/admin-dashboard');
         })
         .catch((error) => {
