@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 const App = () => {
+    const [justRegistered, setJustRegistered] = useState(false);
 
     return (
         <Router>
@@ -19,11 +20,11 @@ const App = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/admin-dashboard" element={<AdminDashboard />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/register" element={<Register setJustRegistered={setJustRegistered} />} />
                 </Routes>
             </div>
             <ToastContainer />
-            <ToastManager />
+            <ToastManager justRegistered={justRegistered} />
         </Router>
     );
 };
