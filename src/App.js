@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import BookingSystem from './components/BookingSystem';
 import Navbar from './components/Navbar';
 import ToastManager from './components/ToastManager';
-import AdminDashboard from './pages/AdminDashboard';
+import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -23,7 +23,7 @@ const App = () => {
                     <Route path="/booking-system" element={<BookingSystem />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register setJustRegistered={setJustRegistered} />} />
-                    <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                 </Routes>
             </div>
             <ToastContainer />

@@ -27,9 +27,9 @@ const Navbar = () => {
                 {/* <li className='navbar-item'>
                     <Link to='/' className='navbar-link'>Home</Link>
                 </li> */}
-                {/* <li className='navbar-item'>
-                    <Link to='/admin-dashboard' className='navbar-link'>Admin Dashboard</Link>
-                </li> */}
+                {<li className='navbar-item'>
+                    <Link to='/dashboard' className='navbar-link'>Dashboard</Link>
+                </li>}
                 {!user && (
                     <>
                         <li className='navbar-item'>

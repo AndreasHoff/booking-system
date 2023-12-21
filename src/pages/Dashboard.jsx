@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 
-const AdminDashboard = () => {
+const Dashboard = () => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className='sidebar'>
-                    <a href='/admin-dashboard'>
+                    <a href='/dashboard'>
                         <span className='material-icons-sharp'>dashboard</span>
                         <h3>Dashboard</h3>
                     </a>
@@ -86,10 +86,10 @@ const AdminDashboard = () => {
                         <h3>Tickets</h3>
                         <span className='message-count'>27</span>
                     </a>
-                    <a href='/sales'>
+                    <Link to="/bookings">
                         <span className='material-icons-sharp'>inventory</span>
-                        <h3>Sale List</h3>
-                    </a>
+                        <h3>Bookings</h3>
+                    </Link>
                     <a href='/reports'>
                         <span className='material-icons-sharp'>report_gmailerrorred</span>
                         <h3>Reports</h3>
@@ -115,8 +115,8 @@ const AdminDashboard = () => {
                     <div className='sales'>
                         <div className='status'>
                             <div className='info'>
-                                <h3>Total Sale</h3>
-                                <h1>$53,424</h1>
+                                <h3>Total Bookings</h3>
+                                <h1>111</h1>
                             </div>
                             <div className='progress'>
                                 <svg>
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className='recent-orders'>
-                    <h2>Recent Orders</h2>
+                    <h2>Recent Bookings</h2>
                     <table>
                         <thead>
                             <tr>
@@ -325,4 +325,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard;
+export default Dashboard;

@@ -28,7 +28,7 @@ const Register = () => {
             // ...
             console.log(user)
             console.log('registration succesful');
-            navigate('/admin-dashboard');
+            navigate('/dashboard');
         })
         .catch((error) => {
             const errorCode = error.code;
