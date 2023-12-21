@@ -3,31 +3,35 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
 }
 
 .booking-card {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-}
-
-.booking-card input,
-.booking-card select,
-.booking-card textarea {
-    max-width: 200px;
-    margin-bottom: 10px;
-    flex-direction: column;
-    align-items: left;
     border: 1px solid #ccc;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-form {
+.booking-card select,
+.booking-card input,
+.booking-card textarea,
+.booking-card label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.booking-card .accordion-header {
     display: flex;
-    flex-direction: column;
-    align-items: left;
+    justify-content: space-between;
+}
+
+.booking-card .accordion-content {
+    margin-top: 10px;
+}
+
+.booking-card select.open {
+    max-height: 200px;
+    /* Adjust the max height as needed */
+    transition: max-height 0.3s ease-in-out;
+    overflow: hidden;
 }
