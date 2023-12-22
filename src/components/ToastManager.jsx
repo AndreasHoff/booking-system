@@ -5,7 +5,6 @@ import { auth } from '../firebase';
 
 const ToastManager = () => {
     const [prevUser, setPrevUser] = useState(null);
-    const [errorToasterDisplayed, setErrorToasterDisplayed] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -28,19 +27,18 @@ const ToastManager = () => {
                 setTimeout(() => {
                     toast.success('Logout successful', { autoClose: 100 });
                 }, 500);
-            } else if (!errorToasterDisplayed) {
-                // Display error toaster for unauthenticated access with a delay
+            } /* else if (!errorToasterDisplayed) {
                 setTimeout(() => {
                     toast.error('You must be logged in to access this page', { autoClose: 100 });
                     setErrorToasterDisplayed(true);
                 }, 500);
-            }
+            } */
 
             setPrevUser(user);
         });
 
         return () => unsubscribe();
-    }, [prevUser, errorToasterDisplayed]);
+    }, [prevUser]);
 
     return null;
 };

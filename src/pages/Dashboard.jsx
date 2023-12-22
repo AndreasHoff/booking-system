@@ -2,10 +2,17 @@ import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
+import { toast } from 'react-toastify';
+import Bookings from '../components/Bookings';
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
+    const [currentSection, setCurrentSection] = useState('analytics');
+
+    const handleSectionChange = (section) => {
+        setCurrentSection(section);
+      };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -13,6 +20,7 @@ const Dashboard = () => {
                 setUser(user);
             } else {
                 console.log('user not logged in')
+                toast.error('You must be logged in to access this page', { autoClose: 100 });
                 navigate('/login');
             }
         }, []);
@@ -74,10 +82,7 @@ const Dashboard = () => {
                         <span className='material-icons-sharp'>receipt_long</span>
                         <h3>History</h3>
                     </a>
-                    <a
-                        href='/analytics'
-                        className='active'
-                    >
+                    <a onClick={() => handleSectionChange('analytics')}>
                         <span className='material-icons-sharp'>insights</span>
                         <h3>Analytics</h3>
                     </a>
@@ -86,10 +91,10 @@ const Dashboard = () => {
                         <h3>Tickets</h3>
                         <span className='message-count'>27</span>
                     </a>
-                    <Link to="/bookings">
+                    <a onClick={() => handleSectionChange('bookings')}>
                         <span className='material-icons-sharp'>inventory</span>
                         <h3>Bookings</h3>
-                    </Link>
+                    </a>
                     <a href='/reports'>
                         <span className='material-icons-sharp'>report_gmailerrorred</span>
                         <h3>Reports</h3>
@@ -110,71 +115,80 @@ const Dashboard = () => {
                 </aside>
 
             <main>
-                <h1>Analytics</h1>
-                <div className='analyse'>
-                    <div className='sales'>
-                        <div className='status'>
-                            <div className='info'>
-                                <h3>Total Bookings</h3>
-                                <h1>111</h1>
-                            </div>
-                            <div className='progress'>
-                                <svg>
-                                    <circle
-                                        cx='38'
-                                        cy='38'
-                                        r='38'
-                                    ></circle>
-                                </svg>
-                                <div className='percentage'>
-                                    <p>+81%</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='visits'>
-                        <div className='status'>
-                            <div className='info'>
-                                <h3>Site Visits</h3>
-                                <h1>13,424</h1>
-                            </div>
-                            <div className='progress'>
-                                <svg>
-                                    <circle
-                                        cx='38'
-                                        cy='38'
-                                        r='38'
-                                    ></circle>
-                                </svg>
-                                <div className='percentage'>
-                                    <p>-48</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='searches'>
-                        <div className='status'>
-                            <div className='info'>
-                                <h3>Searches</h3>
-                                <h1>14,342</h1>
-                            </div>
-                            <div className='progress'>
-                                <svg>
-                                    <circle
-                                        cx='38'
-                                        cy='38'
-                                        r='38'
-                                    ></circle>
-                                </svg>
-                                <div className='percentage'>
-                                    <p>+24%</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            {currentSection === 'bookings' && (
+              <Bookings />
+            )}
 
-                <div className='new-users'>
+            {currentSection === 'analytics' && (
+                <>
+                 <h1>Analytics</h1>
+                 <div className='analyse'>
+                     <div className='sales'>
+                         <div className='status'>
+                             <div className='info'>
+                                 <h3>Total Bookings</h3>
+                                 <h1>111</h1>
+                             </div>
+                             <div className='progress'>
+                                 <svg>
+                                     <circle
+                                         cx='38'
+                                         cy='38'
+                                         r='38'
+                                     ></circle>
+                                 </svg>
+                                 <div className='percentage'>
+                                     <p>+81%</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div className='visits'>
+                         <div className='status'>
+                             <div className='info'>
+                                 <h3>Site Visits</h3>
+                                 <h1>13,424</h1>
+                             </div>
+                             <div className='progress'>
+                                 <svg>
+                                     <circle
+                                         cx='38'
+                                         cy='38'
+                                         r='38'
+                                     ></circle>
+                                 </svg>
+                                 <div className='percentage'>
+                                     <p>-48</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div className='searches'>
+                         <div className='status'>
+                             <div className='info'>
+                                 <h3>Searches</h3>
+                                 <h1>14,342</h1>
+                             </div>
+                             <div className='progress'>
+                                 <svg>
+                                     <circle
+                                         cx='38'
+                                         cy='38'
+                                         r='38'
+                                     ></circle>
+                                 </svg>
+                                 <div className='percentage'>
+                                     <p>+24%</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 </>
+            )}
+               
+
+                {/* <div className='new-users'>
                     <h2>New Users</h2>
                     <div className='user-list'>
                         <div className='user'>
@@ -235,7 +249,7 @@ const Dashboard = () => {
                         <tbody></tbody>
                     </table>
                     <a href='/show-all'>Show all</a>
-                </div>
+                </div> */}
             </main>
 
             <div className='right-section'>
