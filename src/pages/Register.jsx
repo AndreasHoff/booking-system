@@ -61,7 +61,7 @@ const Register = () => {
                 </label>
                 {passwordMatchError && <p className="error-text">Passwords do not match.</p>}
                 {registrationError && <p className="error-text">{registrationError}</p>}
-                <button type="submit">Register</button>
+                <button className="register-button" type="submit">Register</button>
             </form>
         </div>
     );

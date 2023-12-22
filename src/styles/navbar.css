@@ -23,6 +23,8 @@
 }
 
 .navbar-link {
+    background-color: #333;
+    cursor: pointer;
     display: block;
     color: white;
     text-align: center;

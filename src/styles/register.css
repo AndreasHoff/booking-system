@@ -19,17 +19,17 @@ input {
     box-sizing: border-box;
 }
 
-button {
+.register-button {
     background-color: #4caf50;
     color: white;
     padding: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
 
-button:hover {
+    &:hover{
     background-color: #45a049;
+    }
 }
 
 .error-text {

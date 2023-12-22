@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { toast } from 'react-toastify';
 import Bookings from '../components/Bookings';
+import '../styles/dashboard.css'
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -12,6 +13,11 @@ const Dashboard = () => {
 
     const handleSectionChange = (section) => {
         setCurrentSection(section);
+      };
+
+      const activeMenuItem = (section) => {
+        const isActive = currentSection === section
+        return isActive ? 'active' : '';
       };
 
     useEffect(() => {
@@ -70,49 +76,45 @@ const Dashboard = () => {
                 </div>
 
                 <div className='sidebar'>
-                    <a href='/dashboard'>
+                    <button type="button" className={activeMenuItem('dashboard')} onClick={() => handleSectionChange('dashboard')}>
                         <span className='material-icons-sharp'>dashboard</span>
                         <h3>Dashboard</h3>
-                    </a>
-                    <a href='/users'>
+                    </button>
+                    <button type="button" className={activeMenuItem('users')}>
                         <span className='material-icons-sharp'>person_outline</span>
                         <h3>Users</h3>
-                    </a>
-                    <a href='/history'>
+                    </button>
+                    <button type="button" className={activeMenuItem('history')}>
                         <span className='material-icons-sharp'>receipt_long</span>
                         <h3>History</h3>
-                    </a>
-                    <a onClick={() => handleSectionChange('analytics')}>
+                    </button>
+                    <button type="button" className={activeMenuItem('analytics')} onClick={() => handleSectionChange('analytics')}>
                         <span className='material-icons-sharp'>insights</span>
                         <h3>Analytics</h3>
-                    </a>
-                    <a href='/tickets'>
+                    </button>
+                    <button type="button">
                         <span className='material-icons-sharp'>mail_outline</span>
                         <h3>Tickets</h3>
                         <span className='message-count'>27</span>
-                    </a>
-                    <a onClick={() => handleSectionChange('bookings')}>
+                    </button>
+                    <button type="button" className={activeMenuItem('bookings')} onClick={() => handleSectionChange('bookings')}>
                         <span className='material-icons-sharp'>inventory</span>
                         <h3>Bookings</h3>
-                    </a>
-                    <a href='/reports'>
+                    </button>
+                    <button type="button">
                         <span className='material-icons-sharp'>report_gmailerrorred</span>
                         <h3>Reports</h3>
-                    </a>
-                    <a href='/settings'>
+                    </button>
+                    <button type="button">
                         <span className='material-icons-sharp'>settings</span>
                         <h3>Settings</h3>
-                    </a>
-                    <a href='/new-login'>
-                        <span className='material-icons-sharp'>add</span>
-                        <h3>New Login</h3>
-                    </a>
-                    <a href='/logout'>
+                    </button>
+                    <button type="button">
                         <span className='material-icons-sharp'>logout</span>
                         <h3>Logout</h3>
-                    </a>
+                    </button>
                 </div>
-                </aside>
+            </aside>
 
             <main>
             {currentSection === 'bookings' && (
