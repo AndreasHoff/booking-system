@@ -1,15 +1,40 @@
 import { onAuthStateChanged } from 'firebase/auth';
+import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
 import { toast } from 'react-toastify';
 import Bookings from '../components/Bookings';
-import '../styles/dashboard.css'
+import { auth, db } from '../firebase';
+import '../styles/dashboard.css';
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const [currentSection, setCurrentSection] = useState('analytics');
+    const [totalBookings, setTotalBookings] = useState(0);
+    const [recentBookings, setRecentBookings] = useState([]);
+
+    useEffect(() => {
+        const fetchTotalBookings = async () => {
+            const bookingCollection = collection(db, 'bookings');
+            const bookingSnapshot = await getDocs(bookingCollection);
+            setTotalBookings(bookingSnapshot.size);
+        };
+
+        fetchTotalBookings();
+    }, []);
+
+    useEffect(() => {
+        const fetchRecentBookings = async () => {
+            const bookingCollection = collection(db, 'bookings');
+            const bookingQuery = query(bookingCollection, orderBy('date', 'desc'), limit(5));
+            const bookingSnapshot = await getDocs(bookingQuery);
+            const bookingList = bookingSnapshot.docs.map(doc => doc.data());
+            setRecentBookings(bookingList);
+        };
+
+        fetchRecentBookings();
+    }, []);
 
     const handleSectionChange = (section) => {
         setCurrentSection(section);
@@ -127,10 +152,10 @@ const Dashboard = () => {
                  <div className='analyse'>
                      <div className='sales'>
                          <div className='status'>
-                             <div className='info'>
-                                 <h3>Total Bookings</h3>
-                                 <h1>111</h1>
-                             </div>
+                            <div className='info'>
+                                <h3>Total Bookings</h3>
+                                <h1>{totalBookings}</h1>
+                            </div>
                              <div className='progress'>
                                  <svg>
                                      <circle
@@ -190,7 +215,7 @@ const Dashboard = () => {
             )}
                
 
-                {/* <div className='new-users'>
+                <div className='new-users'>
                     <h2>New Users</h2>
                     <div className='user-list'>
                         <div className='user'>
@@ -236,22 +261,33 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className='recent-orders'>
-                    <h2>Recent Bookings</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Course Name</th>
-                                <th>Course Number</th>
-                                <th>Payment</th>
-                                <th>Status</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <a href='/show-all'>Show all</a>
-                </div> */}
+                <div className='recent-bookings'>
+            <h2>Recent Bookings</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {recentBookings.map((booking, index) => (
+                        <tr key={index}>
+                            <td>{booking.service}</td>
+                            <td>{booking.date}</td>
+                            <td>{booking.fullName}</td>
+                            <td>{booking.email}</td>
+                            <td>{booking.comment}</td>
+                            <td></td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <a href='/show-all'>Show all</a>
+        </div>
             </main>
 
             <div className='right-section'>

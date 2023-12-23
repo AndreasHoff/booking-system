@@ -31,7 +31,10 @@
 
 .booking-card select.open {
     max-height: 200px;
-    /* Adjust the max height as needed */
     transition: max-height 0.3s ease-in-out;
     overflow: hidden;
+}
+
+.confirm {
+    color: blue;
 }

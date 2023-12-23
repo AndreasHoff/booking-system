@@ -174,7 +174,6 @@ aside .sidebar button {
     position: relative;
     transition: all 0.3s ease;
     background-color: var(--color-white);
-
     &:hover {
         color: var(--color-primary);
         cursor: pointer;
@@ -341,15 +340,15 @@ main .new-users .user-list .user img {
     border-radius: 50%;
 }
 
-main .recent-orders {
+main .recent-bookings {
     margin-top: 1.3rem;
 }
 
-main .recent-orders h2 {
+main .recent-bookings h2 {
     margin-bottom: 0.8rem;
 }
 
-main .recent-orders table {
+main .recent-bookings table {
     background-color: var(--color-white);
     width: 100%;
     padding: var(--card-padding);
@@ -359,7 +358,7 @@ main .recent-orders table {
     transition: all 0.3s ease;
 }
 
-main .recent-orders table:hover {
+main .recent-bookings table:hover {
     box-shadow: none;
 }
 
@@ -373,7 +372,7 @@ main table tbody tr:last-child td {
     border: none;
 }
 
-main .recent-orders a {
+main .recent-bookings a {
     text-align: center;
     display: block;
     margin: 1rem auto;
@@ -537,8 +536,6 @@ main .recent-orders a {
     gap: 0.6rem;
 }
 
-
-
 @media screen and (max-width: 1200px) {
     .container {
         width: 95%;
@@ -564,14 +561,14 @@ main .recent-orders a {
     main .new-users .user-list .user {
         flex-basis: 40%;
     }
-    main .recent-orders {
+    main .recent-bookings {
         width: 94%;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
         margin: 2rem 0 0 0.8rem;
     }
-    main .recent-orders table {
+    main .recent-bookings table {
         width: 83vh;
     }
     main table tbody tr td:last-child,
@@ -630,12 +627,12 @@ main .recent-orders a {
     main .new-users .user-list .user {
         flex-basis: 35%
     }
-    main .recent-orders {
+    main .recent-bookings {
         position: relative;
         margin: 3rem 0 0 0;
         width: 100%;
     }
-    main .recent-orders table {
+    main .recent-bookings table {
         width: 100%;
         margin: 0;
     }

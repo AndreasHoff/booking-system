@@ -113,7 +113,7 @@ const BookingSystem = () => {
                         I accept the terms
                     </label>
 
-                    <button type="button" onClick={handleConfirm}>
+                    <button className='confirm' type="button" onClick={handleConfirm}>
                         Confirm
                     </button>
                 </form>
