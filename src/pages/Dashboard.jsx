@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Bookings from '../components/Bookings';
+import Settings from '../components/Settings';
 import { auth, db } from '../firebase';
 import '../styles/dashboard.css';
 
@@ -101,9 +102,9 @@ const Dashboard = () => {
                 </div>
 
                 <div className='sidebar'>
-                    <button type="button" className={activeMenuItem('dashboard')} onClick={() => handleSectionChange('dashboard')}>
-                        <span className='material-icons-sharp'>dashboard</span>
-                        <h3>Dashboard</h3>
+                    <button type="button" className={activeMenuItem('analytics')} onClick={() => handleSectionChange('analytics')}>
+                        <span className='material-icons-sharp'>insights</span>
+                        <h3>Analytics</h3>
                     </button>
                     <button type="button" className={activeMenuItem('users')}>
                         <span className='material-icons-sharp'>person_outline</span>
@@ -112,10 +113,6 @@ const Dashboard = () => {
                     <button type="button" className={activeMenuItem('history')}>
                         <span className='material-icons-sharp'>receipt_long</span>
                         <h3>History</h3>
-                    </button>
-                    <button type="button" className={activeMenuItem('analytics')} onClick={() => handleSectionChange('analytics')}>
-                        <span className='material-icons-sharp'>insights</span>
-                        <h3>Analytics</h3>
                     </button>
                     <button type="button">
                         <span className='material-icons-sharp'>mail_outline</span>
@@ -130,7 +127,7 @@ const Dashboard = () => {
                         <span className='material-icons-sharp'>report_gmailerrorred</span>
                         <h3>Reports</h3>
                     </button>
-                    <button type="button">
+                    <button type="button" className={activeMenuItem('settings')} onClick={() => handleSectionChange('settings')}>
                         <span className='material-icons-sharp'>settings</span>
                         <h3>Settings</h3>
                     </button>
@@ -144,6 +141,10 @@ const Dashboard = () => {
             <main>
             {currentSection === 'bookings' && (
               <Bookings />
+            )}
+
+            {currentSection === 'settings' && (
+                <Settings />
             )}
 
             {currentSection === 'analytics' && (
@@ -211,10 +212,7 @@ const Dashboard = () => {
                          </div>
                      </div>
                  </div>
-                 </>
-            )}
-
-            <div className='recent-bookings'>
+                 <div className='recent-bookings'>
                 <h2>Recent Bookings</h2>
                 <table>
                     <thead>
@@ -241,6 +239,8 @@ const Dashboard = () => {
                 </table>
             <a href='/show-all'>Show all</a>
         </div>
+                 </>
+            )}
             </main>
 
             <div className='right-section'>

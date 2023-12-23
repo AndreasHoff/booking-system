@@ -1,0 +1,21 @@
+.settings-form {
+    width: 200px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 10rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.settings-form input,
+.settings-form button {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.settings-form button {
+    cursor: pointer;
+}
