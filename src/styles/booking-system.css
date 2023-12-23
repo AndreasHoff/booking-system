@@ -5,36 +5,13 @@
     height: 100vh;
 }
 
-.booking-card {
-    border: 1px solid #ccc;
-    padding: 20px;
-    width: 300px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.booking-card select,
-.booking-card input,
-.booking-card textarea,
-.booking-card label {
-    display: block;
-    margin-bottom: 10px;
-}
-
-.booking-card .accordion-header {
+.booking-form {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.booking-card .accordion-content {
-    margin-top: 10px;
-}
-
-.booking-card select.open {
-    max-height: 200px;
-    transition: max-height 0.3s ease-in-out;
-    overflow: hidden;
-}
-
-.confirm {
-    color: blue;
+.booking-form select option {
+    color: black;
+    /* Or any color that contrasts with your background */
 }

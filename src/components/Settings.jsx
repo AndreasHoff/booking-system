@@ -33,7 +33,7 @@ const Settings = () => {
 
   return (
     <div className="settings-form">
-      <h2>Add a New Service</h2>
+      <h2>Add or edit a Service</h2>
       <form onSubmit={handleSubmit}>
 
         <label>
