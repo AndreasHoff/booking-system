@@ -28,7 +28,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchRecentBookings = async () => {
             const bookingCollection = collection(db, 'bookings');
-            const bookingQuery = query(bookingCollection, orderBy('date', 'desc'), limit(5));
+            const bookingQuery = query(bookingCollection, orderBy('createdAt', 'desc'), limit(5));
             const bookingSnapshot = await getDocs(bookingQuery);
             const bookingList = bookingSnapshot.docs.map(doc => doc.data());
             setRecentBookings(bookingList);

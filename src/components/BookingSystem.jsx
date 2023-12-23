@@ -1,7 +1,7 @@
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useState } from 'react';
 import { db } from '../firebase';
-import '../styles/bookingSystem.css';
+import '../styles/booking-system.css';
 
 const BookingSystem = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -56,6 +56,7 @@ const BookingSystem = () => {
             email,
             phoneNumber,
             comment,
+            createdAt: serverTimestamp(),
         });
     
         console.log('Document written with ID: ', docRef.id);
