@@ -213,79 +213,32 @@ const Dashboard = () => {
                  </div>
                  </>
             )}
-               
 
-                <div className='new-users'>
-                    <h2>New Users</h2>
-                    <div className='user-list'>
-                        <div className='user'>
-                            <img
-                                src='/images/profile-2.jpg'
-                                alt=''
-                            />
-                            <h2>Jacob</h2>
-                            <p>54 min ago</p>
-                        </div>
-                        <div className='user'>
-                            <img
-                                src='/images/profile-1.jpg'
-                                alt=''
-                            />
-                            <h2>Benjamin</h2>
-                            <p>2 min ago</p>
-                        </div>
-                        <div className='user'>
-                            <img
-                                src='/images/profile-3.jpg'
-                                alt=''
-                            />
-                            <h2>Sarah</h2>
-                            <p>3 hours ago</p>
-                        </div>
-                        <div className='user'>
-                            <img
-                                src='/images/profile-4.jpg'
-                                alt=''
-                            />
-                            <h2>Josephine</h2>
-                            <p>55 min ago</p>
-                        </div>
-                        <div className='user'>
-                            <img
-                                src='/images/plus.png'
-                                alt=''
-                            />
-                            <h2>More</h2>
-                            <p>New Users</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className='recent-bookings'>
-            <h2>Recent Bookings</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Service</th>
-                        <th>Date</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Comment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {recentBookings.map((booking, index) => (
-                        <tr key={index}>
-                            <td>{booking.service}</td>
-                            <td>{booking.date}</td>
-                            <td>{booking.fullName}</td>
-                            <td>{booking.email}</td>
-                            <td>{booking.comment}</td>
-                            <td></td>
+            <div className='recent-bookings'>
+                <h2>Recent Bookings</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Comment</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {recentBookings.map((booking, index) => (
+                            <tr key={index}>
+                                <td>{booking.service}</td>
+                                <td>{booking.date}</td>
+                                <td>{booking.fullName}</td>
+                                <td>{booking.email}</td>
+                                <td>{booking.comment}</td>
+                                <td></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             <a href='/show-all'>Show all</a>
         </div>
             </main>
