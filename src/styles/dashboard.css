@@ -1,8 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-.main-content {
-    padding-top: 60px;
-    /* Adjust this value based on the height of your Navbar */
-}
 
 :root {
     --color-primary: #6C9BCF;
