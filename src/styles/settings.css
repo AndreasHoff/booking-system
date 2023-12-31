@@ -15,4 +15,7 @@
 
 .settings-form button {
     cursor: pointer;
+    background-color: #6f92bb;
+    border-radius: 10px;
+    margin: 10px auto;
 }
