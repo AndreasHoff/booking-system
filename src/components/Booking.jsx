@@ -1,9 +1,9 @@
 import { addDoc, collection, getDocs, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import '../styles/booking-system.css';
+import '../styles/booking.css';
 
-const BookingSystem = () => {
+const Booking = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedService, setSelectedService] = useState('');
@@ -168,4 +168,4 @@ const BookingSystem = () => {
     );
 };
 
-export default BookingSystem;
+export default Booking;

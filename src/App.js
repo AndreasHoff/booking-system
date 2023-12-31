@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import BookingSystem from './components/BookingSystem';
+import Booking from './components/Booking';
 import Navbar from './components/Navbar';
 import ToastManager from './components/ToastManager';
 import Dashboard from './pages/Dashboard';
@@ -20,7 +20,7 @@ const App = () => {
             <div className="pt-20">
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/booking-system" element={<BookingSystem />} />
+                    <Route path="/booking" element={<Booking />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register setJustRegistered={setJustRegistered} />} />
                     <Route path="/dashboard" element={<Dashboard />} />

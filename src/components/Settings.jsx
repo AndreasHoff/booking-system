@@ -4,11 +4,13 @@ import { db } from '../firebase';
 import '../styles/settings.css';
 
 const Settings = () => {
+    // Define state variables for the category, services array, service name, and description
     const [category, setCategory] = useState('');
     const [services, setServices] = useState([]);
     const [serviceName, setServiceName] = useState('');
     const [description, setDescription] = useState('');
 
+    // Define a function to handle adding a service to the services array
     const handleAddService = () => {
         // Add the current service to the services array
         setServices([...services, { name: serviceName, description }]);
@@ -18,21 +20,25 @@ const Settings = () => {
         setDescription('');
     };
 
+    // Define a function to handle form submission
     const handleSubmit = async (e) => {
+        // Prevent the default form submission behavior
         e.preventDefault();
 
         try {
-            // Add or update the category document
+            // Create a reference to the category document in Firestore
             const categoryDocRef = doc(db, 'categories', category);
+            // Set the category document in Firestore, merging with existing data if it exists
             await setDoc(categoryDocRef, {}, { merge: true });
 
-            // Add all services to the category
+            // Create a reference to the services collection within the category document
             const serviceRef = collection(categoryDocRef, 'services');
+            // Add each service in the services array to the services collection in Firestore
             for (const service of services) {
                 await addDoc(serviceRef, service);
             }
 
-            // Clear form fields after successful submission
+            // Clear the category and services fields after successful submission
             setCategory('');
             setServices([]);
             console.log('Data successfully written to Firestore!');
@@ -41,6 +47,7 @@ const Settings = () => {
         }
     };
 
+    // Render the component
     return (
         <div className="settings-form">
             <h2>Add or edit a Service</h2>

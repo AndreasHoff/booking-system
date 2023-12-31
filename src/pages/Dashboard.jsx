@@ -237,7 +237,7 @@ const Dashboard = () => {
                         ))}
                     </tbody>
                 </table>
-            <a href='/show-all'>Show all</a>
+            <button onClick={() => handleSectionChange('bookings')}>Show all</button>
         </div>
                  </>
             )}
