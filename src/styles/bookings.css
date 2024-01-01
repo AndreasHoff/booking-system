@@ -1,34 +1,36 @@
-table {
+.truncated-comment {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 20ch;
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: block;
 }
 
-th,
-td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
+.full-comment {
+    width: 100%;
+    display: block;
+    word-break: break-all;
 }
 
-th {
-    background-color: #f5f5f5;
+.bookings-table .p-datatable-tbody>tr:nth-child(even) {
+    background-color: #9fffe2;
 }
 
-tr:last-child td {
-    border-bottom: none;
+.bookings-table {
+    user-select: text;
 }
 
-td {
+.button-clicked .p-datatable-tbody>tr>td:not(:last-child) {
     vertical-align: top;
 }
 
-td:last-child {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.chevron-button {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.p-button:focus {
+    box-shadow: 0 0 0 0.1rem #a6d5fa;
 }

@@ -1,52 +1,69 @@
-import Tippy from '@tippyjs/react';
 import { collection, getDocs } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import '../styles/bookings.css';
+import '../styles/Bookings.css'; // Assuming you have a CSS file for styles
 
 const Bookings = () => {
     const [bookings, setBookings] = useState([]);
+    const [expandedRows, setExpandedRows] = useState({});
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
+    const [isAnyRowExpanded, setIsAnyRowExpanded] = useState(false);
 
     useEffect(() => {
         const fetchBookings = async () => {
             const bookingCollection = collection(db, 'bookings');
             const bookingSnapshot = await getDocs(bookingCollection);
-            const bookingList = bookingSnapshot.docs.map(doc => doc.data());
+            const bookingList = bookingSnapshot.docs.map((doc, index) => ({...doc.data(), index}));
             setBookings(bookingList);
         };
-
+    
         fetchBookings();
     }, []);
+    
+    const commentBodyTemplate = (rowData) => {
+        return (
+            <div className={expandedRows[rowData.index] ? 'full-comment' : 'truncated-comment'} style={{width: expandedRows[rowData.index] ? '200px' : 'auto'}}>
+                {rowData.comment}
+            </div>
+        );
+    }
+    
+    const toggleRow = (e, rowData) => {
+        e.preventDefault();
+        setIsButtonClicked(!isButtonClicked);
+        setExpandedRows(prevState => {
+            const newState = {
+                ...prevState,
+                [rowData.index]: !prevState[rowData.index]
+            };
+            setIsAnyRowExpanded(Object.values(newState).includes(true));
+            return newState;
+        });
+    }
+
+    const readMoreBodyTemplate = (rowData) => {
+        if (rowData.comment.length <= 20) {
+            return null;
+        }
+    
+        return (
+            <Button icon={expandedRows[rowData.index] ? 'pi pi-chevron-up' : 'pi pi-chevron-down'} className='p-button-rounded p-mr-2 chevron-button' onClick={(e) => toggleRow(e, rowData)} />
+        );
+    }
 
     return (
-        <table className="w-full rounded-lg shadow-md overflow-hidden">
-            <thead className="bg-gray-100">
-                <tr>
-                    <th className="px-4 py-2">Service</th>
-                    <th className="px-4 py-2">Date</th>
-                    <th className="px-4 py-2">Full Name</th>
-                    <th className="px-4 py-2">Email</th>
-                    <th className="px-4 py-2">Phone Number</th>
-                    <th className="px-4 py-2">Comment</th>
-                </tr>
-            </thead>
-            <tbody>
-                {bookings.map((booking, index) => (
-                    <tr key={index} className="border-b border-gray-200">
-                        <td className="px-4 py-2">{booking.service}</td>
-                        <td className="px-4 py-2">{booking.date}</td>
-                        <td className="px-4 py-2">{booking.fullName}</td>
-                        <td className="px-4 py-2">{booking.email}</td>
-                        <td className="px-4 py-2">{booking.phoneNumber}</td>
-                        <td className="px-4 py-2 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs">
-                            <Tippy content={booking.comment} theme="custom" maxWidth={500} placement='top-start'>
-                                <span>{booking.comment}</span>
-                            </Tippy>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+        <DataTable value={bookings} className={`bookings-table ${isAnyRowExpanded ? 'button-clicked' : ''}`}>
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='service' header='Service' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='date' header='Date' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='fullName' header='Name' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='email' header='Email' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='phoneNumber' header='Number' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} body={commentBodyTemplate} header='Comment' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} body={readMoreBodyTemplate} header='' />
+        </DataTable>
     );
 };
 
