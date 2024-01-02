@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/register.css';
+import '../styles/Register.css';
 
 const Register = () => {
     const navigate = useNavigate();

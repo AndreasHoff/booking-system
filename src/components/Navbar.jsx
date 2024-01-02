@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
 import { auth } from '../firebase';
-import '../styles/navbar.css';
+import '../styles/Navbar.css';
 
 const Navbar = () => {
     const navigate = useNavigate();

@@ -54,6 +54,7 @@ body {
 
 button {
     color: var(--color-dark);
+    cursor: pointer;
 }
 
 img {

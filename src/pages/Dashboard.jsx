@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import Bookings from '../components/Bookings';
 import Settings from '../components/Settings';
 import { auth, db } from '../firebase';
-import '../styles/dashboard.css';
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);

@@ -1,7 +1,7 @@
 import { addDoc, collection, getDocs, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import '../styles/booking.css';
+import '../styles/Booking.css';
 
 const Booking = () => {
     const [categories, setCategories] = useState([]);
