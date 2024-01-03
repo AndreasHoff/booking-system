@@ -2,6 +2,7 @@ import { addDoc, collection, getDocs, onSnapshot, serverTimestamp } from 'fireba
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import '../styles/Booking.css';
+import { useTranslation } from 'react-i18next';
 
 const Booking = () => {
     const [categories, setCategories] = useState([]);
@@ -15,6 +16,7 @@ const Booking = () => {
     const [comment, setComment] = useState('');
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [isAccordionOpen, setAccordionOpen] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'categories'), async (snapshot) => {
@@ -38,7 +40,8 @@ const Booking = () => {
 
     const handleConfirm = async () => {
         if (!termsAccepted) {
-            alert('You must accept the terms');
+            console.log(t('booking.accept_terms.alert'));
+            alert(t('booking.accept_terms.alert'));
             return;
         }
     
