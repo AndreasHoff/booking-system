@@ -1,8 +1,8 @@
 import { addDoc, collection, getDocs, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { db } from '../firebase';
 import '../styles/Booking.css';
-import { useTranslation } from 'react-i18next';
 
 const Booking = () => {
     const [categories, setCategories] = useState([]);
@@ -16,7 +16,7 @@ const Booking = () => {
     const [comment, setComment] = useState('');
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [isAccordionOpen, setAccordionOpen] = useState(false);
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'categories'), async (snapshot) => {
@@ -29,8 +29,10 @@ const Booking = () => {
             setCategories(categoriesData);
         });
 
+        i18n.changeLanguage('da'); // Change language to Danish
+
         return () => unsubscribe();
-    }, []);
+    }, [i18n]);
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
