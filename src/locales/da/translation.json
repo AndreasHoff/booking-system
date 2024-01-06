@@ -1,7 +1,16 @@
 {
     "booking": {
+        "select_category": "Vælg en kategori",
+        "choose_category": "Vælg en kategori",
+        "personal_information": "Personlige oplysninger",
+        "full_name": "Fulde navn",
+        "email": "E-mail",
+        "phone_number": "Telefonnummer",
+        "comment": "Kommentar",
         "accept_terms": {
-            "alert": "Du skal godkende samtykke!"
-        }
+            "text": "Jeg giver mit samtykke",
+            "alert": "Du skal acceptere vilkårene for at fortsætte"
+        },
+        "confirm": "Bekræft"
     }
-  }
+}
