@@ -1,194 +1,172 @@
-import { addDoc, collection, getDocs, onSnapshot, serverTimestamp } from 'firebase/firestore';
-import { Toast } from 'primereact/toast';
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { addDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore';
+import { Button } from 'primereact/button';
+import { Calendar } from 'primereact/calendar';
+import { Checkbox } from 'primereact/checkbox';
+import { Dialog } from 'primereact/dialog';
+import { Dropdown } from 'primereact/dropdown';
+import { InputText } from 'primereact/inputtext';
+import { classNames } from 'primereact/utils';
+import { useEffect, useState } from 'react';
+import { Field, Form } from 'react-final-form';
 import { db } from '../firebase';
 import '../styles/Booking.css';
 
-const Booking = () => {
+export const BookingComponent = () => {
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedService, setSelectedService] = useState('');
-    const [selectedServiceId, setSelectedServiceId] = useState("");
-    const [selectedDate, setSelectedDate] = useState('');
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [comment, setComment] = useState('');
-    const [termsAccepted, setTermsAccepted] = useState(false);
-    const [isAccordionOpen, setAccordionOpen] = useState(false);
-    const { t: translate, i18n } = useTranslation();
-    const toast = useRef(null);
+    const [services, setServices] = useState([]);
+    const [showMessage, setShowMessage] = useState(false);
+    const [formData, setFormData] = useState({});
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(collection(db, 'categories'), async (snapshot) => {
-            const categoriesData = [];
-            for (const doc of snapshot.docs) {
-                const servicesSnapshot = await getDocs(collection(doc.ref, 'services'));
-                const servicesData = servicesSnapshot.docs.map(serviceDoc => ({ ...serviceDoc.data(), id: serviceDoc.id }));
-                categoriesData.push({ ...doc.data(), id: doc.id, services: servicesData });
+        const fetchCategoriesAndServices = async () => {
+            const categoriesSnapshot = await getDocs(collection(db, 'categories'));
+            const categoriesData = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            const categoriesWithServices = await Promise.all(categoriesData.map(async category => {
+                const servicesSnapshot = await getDocs(collection(db, 'categories', category.id, 'services'));
+                const servicesData = servicesSnapshot.docs.map(doc => ({ label: doc.data().name, value: doc.id }));
+                return { label: category.name, value: category.id, services: servicesData };
+            }));
+
+            setCategories(categoriesWithServices);
+            if (categoriesWithServices.length > 0) {
+                setServices(categoriesWithServices[0].services.map(service => ({ label: service.label, value: service.value })));
             }
-            setCategories(categoriesData);
-        });
-
-        i18n.changeLanguage('da');
-
-        return () => unsubscribe();
-    }, [i18n]);
-
-    const handleCategoryChange = (category) => {
-        setSelectedCategory(category);
-        setSelectedService(''); // Reset selected service when category changes
-        setAccordionOpen(!isAccordionOpen); // Toggle accordion open/close
-    };
-
-    const resetForm = () => {
-        setSelectedCategory('');
-        setSelectedService('');
-        setSelectedServiceId('');
-        setSelectedDate('');
-        setFullName('');
-        setEmail('');
-        setPhoneNumber('');
-        setComment('');
-        setTermsAccepted(false);
-        setAccordionOpen(false);
-    };
-
-    const handleConfirm = async () => {
-        if (!termsAccepted) {
-            alert(translate('booking.accept_terms.alert'));
-            return;
-        }
-    
-        if (!selectedCategory) {
-            alert(translate('booking.select_category.alert'));
-            return;
-        }
-    
-        if (!selectedService) {
-            alert('Please select a service');
-            return;
-        }
-    
-        await addDoc(collection(db, 'bookings'), {
-            category: selectedCategory,
-            service: selectedService,
-            date: selectedDate,
-            fullName,
-            email,
-            phoneNumber,
-            comment,
-            createdAt: serverTimestamp(),
-        });
-
-        const data = {
-            fullName: fullName,
-            email: email,
-            phoneNumber: phoneNumber,
-            comment: comment,
-            termsAccepted: termsAccepted,
-            selectedCategory: selectedCategory,
-            selectedService: selectedService,
-            selectedDate: selectedDate
         };
-        
-        writeToFirebase(data);
 
-        toast.current.show({severity:'success', summary: 'Successful Booking', detail:'Your booking has been confirmed', life: 3000});
+        fetchCategoriesAndServices();
+    }, []);
 
-        resetForm();
+    const DropdownAdapter = ({ input, ...rest }) => (
+        <Dropdown {...input} {...rest} onChange={(e) => {
+            input.onChange(e.value);
+            const selectedCategory = categories.find(category => category.id === e.value);
+            setServices(selectedCategory ? selectedCategory.services : []);
+        }} />
+    );
 
-        function writeToFirebase(data) {
-            console.log("Data being written to Firebase: ", data);
+    const validate = (data) => {
+        let errors = {};
+
+        if (!data.selectedCategory) {
+            errors.selectedCategory = 'Category is required.';
         }
-    
+
+        if (!data.selectedService) {
+            errors.selectedService = 'Service is required.';
+        }
+
+        if (!data.fullName) {
+            errors.fullName = 'Full name is required.';
+        }
+
+        if (!data.email) {
+            errors.email = 'Email is required.';
+        }
+
+        if (!data.phoneNumber) {
+            errors.phoneNumber = 'Phone number is required.';
+        }
+
+        if (!data.termsAccepted) {
+            errors.termsAccepted = 'You need to agree to the terms and conditions.';
+        }
+
+        return errors;
     };
 
-    return (
-        <div className="booking-container">
-            <Toast ref={toast} />
-            <div>
-                <div>
-                    <label>Select a category</label>
-                    <select
-                        value={selectedCategory}
-                        onChange={(e) => handleCategoryChange(e.target.value)}
-                    >
-                        <option value="">
-                            Choose a category
-                        </option>
-                        {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                            {category.id}
-                        </option>
-                        ))}
-                    </select>
+    const onSubmit = (data, form) => {
+        setFormData(data);
+        setShowMessage(true);
+    
+        writeToFirebase(data);
+    
+        form.restart();
+    };
+
+    const fetchServices = categoriesData.map(async category => {
+        const servicesSnapshot = await getDocs(collection(db, 'categories', category.id, 'services'));
+        const servicesData = servicesSnapshot.docs.map(doc => ({ label: doc.data().name, value: doc.id }));
+        return { label: category.name, value: category.id, services: servicesData };
+    });
+
+    async function writeToFirebase(data) {
+        try {
+            const docRef = await addDoc(collection(db, "bookings"), {
+                ...data,
+                timestamp: serverTimestamp(),
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } catch (error) {
+            console.error("Error adding document: ", error);
+        }
+    }
+
+return (
+    <Form
+    onSubmit={onSubmit}
+    initialValues={formData}
+    validate={validate}
+    render={({ handleSubmit }) => (
+        <div className="booking-form-container">
+            <form onSubmit={handleSubmit} className="booking-form p-fluid">
+                <h5>Booking Form</h5>
+                <div className="p-field">
+                    <label htmlFor="selectedCategory">Select a category</label>
+                    <Field name="selectedCategory" component={DropdownAdapter} options={categories.map(category => ({ label: category.name, value: category.id }))} />
                 </div>
-            {selectedCategory && (
-            <div>
-            <label>Select a service</label>
-            <select 
-                value={selectedServiceId} 
-                onChange={(e) => {
-                    const selectedServiceObject = categories
-                        .find((category) => category.id === selectedCategory)
-                        .services
-                        .find((service) => service.id === e.target.value);
-
-                    if (selectedServiceObject) {
-                        setSelectedService(selectedServiceObject.name);
-                        setSelectedServiceId(selectedServiceObject.id);
-                    } else {
-                        setSelectedService(null);
-                        setSelectedServiceId(null);
-                    }
-                }}
-            >
-                <option value="">
-                    Choose a service
-                </option>
-                {categories
-                    .find((category) => category.id === selectedCategory)
-                    .services
-                    .map((service) => (
-                        <option key={service.id} value={service.id}>
-                            {service.name}
-                        </option>
-                    ))
-                }
-            </select>
-            {selectedService && (
-                <p>
-                    {categories
-                        .find((category) => category.id === selectedCategory)
-                        .services
-                        .find((service) => service.name === selectedService)
-                        .description}
-                </p>
-            )}
-        </div>
-    )}
-
-            <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
-            <h2>Personal Information</h2>
-            <form onSubmit={(e) => e.preventDefault()} className="booking-form">
-                <input type="text" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input type="tel" placeholder="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                <textarea placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)} />
-                <label>
-                    <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} />
-                    I accept the terms
-                </label>
-
-                <button type="button" onClick={handleConfirm}>
-                    Confirm
-                </button>
+                <div className="p-field">
+                    <label htmlFor="selectedService">Select a service</label>
+                    <Field name="selectedService" component={DropdownAdapter} options={services.map(service => ({ label: service.name, value: service.id }))} />
+                </div>
+                <div className="p-field">
+                    <label htmlFor="fullName">Full Name</label>
+                    <Field name="fullName" component={InputText} />
+                </div>
+                <div className="p-field">
+                    <label htmlFor="email">Email</label>
+                    <Field name="email" component={InputText} />
+                </div>
+                <div className="p-field">
+                    <label htmlFor="phoneNumber">Phone Number</label>
+                    <Field name="phoneNumber" component={InputText} />
+                </div>
+                <div className="p-field">
+                    <label htmlFor="date">Date</label>
+                    <Field name="date" render={({ input, meta }) => (
+                        <span className={classNames({ 'p-invalid': meta.touched && meta.error })}>
+                            <Calendar {...input} id="date" showIcon />
+                            {meta.touched && meta.error && <small className="p-error">{meta.error}</small>}
+                        </span>
+                    )} />
+                </div>
+                <div className="p-field-checkbox">
+                    <Field name="termsAccepted" component={Checkbox} />
+                    <label htmlFor="termsAccepted">I accept the terms and conditions</label>
+                </div>
+                <Button type="submit" label="Submit" className="p-mt-2" />
+                <Dialog visible={showMessage} style={{ width: '450px' }} header="Booking Details" onHide={() => setShowMessage(false)}>
+                    <div className="p-fluid p-formgrid p-grid">
+                        <div className="p-field p-col-12">
+                            <label htmlFor="fullName">Full Name</label>
+                            <InputText id="fullName" value={formData.fullName} readOnly />
+                        </div>
+                        <div className="p-field p-col-12">
+                            <label htmlFor="email">Email</label>
+                            <InputText id="email" value={formData.email} readOnly />
+                        </div>
+                        <div className="p-field p-col-12">
+                            <label htmlFor="phoneNumber">Phone Number</label>
+                            <InputText id="phoneNumber" value={formData.phoneNumber} readOnly />
+                        </div>
+                    </div>
+                </Dialog>
             </form>
         </div>
-    </div>
-    );
+    )}
+/>
+);
+
 };
 
-export default Booking;
+export default BookingComponent;
