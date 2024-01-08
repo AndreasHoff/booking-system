@@ -1,172 +1,218 @@
-import { addDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { Form, Field } from 'react-final-form';
+import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
+import { Password } from 'primereact/password';
 import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
+import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
-import { useEffect, useState } from 'react';
-import { Field, Form } from 'react-final-form';
+import { addDoc, collection, serverTimestamp, onSnapshot, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import '../styles/Booking.css';
 
-export const BookingComponent = () => {
-    const [categories, setCategories] = useState([]);
-    const [services, setServices] = useState([]);
+const BookingComponent = () => {
     const [showMessage, setShowMessage] = useState(false);
-    const [formData, setFormData] = useState({});
+    const [categories, setCategories] = useState([]);
+    const [dialogData, setDialogData] = useState({ fullName: '', email: '' });
+
+    const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
+
+    const getFormErrorMessage = (meta) => {
+        return isFormFieldValid(meta) && <small className="p-error">{meta.error}</small>;
+    };
 
     useEffect(() => {
-        const fetchCategoriesAndServices = async () => {
-            const categoriesSnapshot = await getDocs(collection(db, 'categories'));
-            const categoriesData = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-            const categoriesWithServices = await Promise.all(categoriesData.map(async category => {
-                const servicesSnapshot = await getDocs(collection(db, 'categories', category.id, 'services'));
-                const servicesData = servicesSnapshot.docs.map(doc => ({ label: doc.data().name, value: doc.id }));
-                return { label: category.name, value: category.id, services: servicesData };
-            }));
-
-            setCategories(categoriesWithServices);
-            if (categoriesWithServices.length > 0) {
-                setServices(categoriesWithServices[0].services.map(service => ({ label: service.label, value: service.value })));
+        const unsubscribe = onSnapshot(collection(db, 'categories'), async (snapshot) => {
+            const categoriesData = [];
+            for (const doc of snapshot.docs) {
+                const servicesSnapshot = await getDocs(collection(doc.ref, 'services'));
+                const servicesData = servicesSnapshot.docs.map(serviceDoc => ({ ...serviceDoc.data(), id: serviceDoc.id }));
+                categoriesData.push({ ...doc.data(), id: doc.id, services: servicesData });
             }
-        };
-
-        fetchCategoriesAndServices();
+            console.log('Fetched Categories:', categoriesData);
+            setCategories(categoriesData);
+        });
+        return () => unsubscribe();
     }, []);
-
-    const DropdownAdapter = ({ input, ...rest }) => (
-        <Dropdown {...input} {...rest} onChange={(e) => {
-            input.onChange(e.value);
-            const selectedCategory = categories.find(category => category.id === e.value);
-            setServices(selectedCategory ? selectedCategory.services : []);
-        }} />
-    );
 
     const validate = (data) => {
         let errors = {};
-
-        if (!data.selectedCategory) {
-            errors.selectedCategory = 'Category is required.';
-        }
-
-        if (!data.selectedService) {
-            errors.selectedService = 'Service is required.';
-        }
-
         if (!data.fullName) {
-            errors.fullName = 'Full name is required.';
+            errors.fullName = 'Full Name is required.';
         }
-
-        if (!data.email) {
-            errors.email = 'Email is required.';
-        }
-
-        if (!data.phoneNumber) {
-            errors.phoneNumber = 'Phone number is required.';
-        }
-
-        if (!data.termsAccepted) {
-            errors.termsAccepted = 'You need to agree to the terms and conditions.';
-        }
-
         return errors;
     };
 
-    const onSubmit = (data, form) => {
-        setFormData(data);
-        setShowMessage(true);
-    
-        writeToFirebase(data);
-    
-        form.restart();
+    const onSubmit = async (data) => {
+        const fullName = data.fullName;
+        const email = data.email;
+        const termsAccepted = data.accept;
+
+        // ... (your existing code)
+
+        const firebaseData = {
+            fullName,
+            email,
+            phoneNumber: data.phoneNumber,
+            comment: data.comment,
+            termsAccepted,
+            selectedCategory: data.selectedCategory,
+            selectedService: data.selectedService,
+            selectedDate: data.date,
+        };
+
+        setDialogData({ fullName, email }); // Set data for the dialog
+        writeToFirebase(firebaseData);
+
+        setShowMessage(true); // Show the dialog
     };
 
-    const fetchServices = categoriesData.map(async category => {
-        const servicesSnapshot = await getDocs(collection(db, 'categories', category.id, 'services'));
-        const servicesData = servicesSnapshot.docs.map(doc => ({ label: doc.data().name, value: doc.id }));
-        return { label: category.name, value: category.id, services: servicesData };
-    });
+    const writeToFirebase = (data) => {
+        console.log('Data being written to Firebase: ', data);
+        // You can add logic to write to Firebase here
+    };
+    
+    
 
-    async function writeToFirebase(data) {
-        try {
-            const docRef = await addDoc(collection(db, "bookings"), {
-                ...data,
-                timestamp: serverTimestamp(),
-            });
-            console.log("Document written with ID: ", docRef.id);
-        } catch (error) {
-            console.error("Error adding document: ", error);
-        }
-    }
+    const dialogFooter = <div className="flex justify-content-center"><Button label="OK" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} /></div>;
+    const passwordHeader = <h6>Pick a password</h6>;
+    const passwordFooter = (
+        <React.Fragment>
+            <Divider />
+            <p className="mt-2">Suggestions</p>
+            <ul className="pl-2 ml-2 mt-0" style={{ lineHeight: '1.5' }}>
+                <li>At least one lowercase</li>
+                <li>At least one uppercase</li>
+                <li>At least one numeric</li>
+                <li>Minimum 8 characters</li>
+            </ul>
+        </React.Fragment>
+    );
 
-return (
-    <Form
-    onSubmit={onSubmit}
-    initialValues={formData}
-    validate={validate}
-    render={({ handleSubmit }) => (
+    return (
         <div className="booking-form-container">
-            <form onSubmit={handleSubmit} className="booking-form p-fluid">
-                <h5>Booking Form</h5>
-                <div className="p-field">
-                    <label htmlFor="selectedCategory">Select a category</label>
-                    <Field name="selectedCategory" component={DropdownAdapter} options={categories.map(category => ({ label: category.name, value: category.id }))} />
+            <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
+                <div className="flex align-items-center flex-column pt-6 px-3">
+                    <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
+                    <h5>Registration Successful!</h5>
+                    <p style={{ lineHeight: 1.5, textIndent: '1rem' }}>
+                        Your account is registered under name <b>{dialogData.fullName}</b>; it'll be valid next 30 days without activation.
+                        Please check <b>{dialogData.email}</b> for activation instructions.
+                    </p>
                 </div>
-                <div className="p-field">
-                    <label htmlFor="selectedService">Select a service</label>
-                    <Field name="selectedService" component={DropdownAdapter} options={services.map(service => ({ label: service.name, value: service.id }))} />
-                </div>
-                <div className="p-field">
-                    <label htmlFor="fullName">Full Name</label>
-                    <Field name="fullName" component={InputText} />
-                </div>
-                <div className="p-field">
-                    <label htmlFor="email">Email</label>
-                    <Field name="email" component={InputText} />
-                </div>
-                <div className="p-field">
-                    <label htmlFor="phoneNumber">Phone Number</label>
-                    <Field name="phoneNumber" component={InputText} />
-                </div>
-                <div className="p-field">
-                    <label htmlFor="date">Date</label>
-                    <Field name="date" render={({ input, meta }) => (
-                        <span className={classNames({ 'p-invalid': meta.touched && meta.error })}>
-                            <Calendar {...input} id="date" showIcon />
-                            {meta.touched && meta.error && <small className="p-error">{meta.error}</small>}
-                        </span>
+            </Dialog>
+
+            <div className="flex justify-content-center">
+                <div className="card">
+                    <h5 className="text-center">Register</h5>
+                    <Form onSubmit={onSubmit} initialValues={{}} validate={validate} render={({ handleSubmit }) => (
+                        <form onSubmit={handleSubmit} className="p-fluid">
+                            {/* Category */}
+                            <Field name="selectedCategory" render={({ input }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <Dropdown id="category" {...input} options={categories} optionLabel="name" />
+                                        <label htmlFor="category">Category</label>
+                                    </span>
+                                </div>
+                            )} />
+
+                            {/* Service - Conditionally rendered based on the selected category */}
+                            <Field name="selectedService" render={({ input }) => {
+                                const selectedCategoryData = categories.find(category => category.id === input.value);
+                                return (
+                                    <div className="field">
+                                        <span className="p-float-label">
+                                            <Dropdown id="service" {...input} options={selectedCategoryData?.services || []} optionLabel="name" optionValue="id" className="p-inputtext" />
+                                            <label htmlFor="service">Service</label>
+                                        </span>
+                                    </div>
+                                );
+                            }} />
+
+                            {/* Name */}
+                            <Field name="fullName" render={({ input, meta }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <InputText id="fullName" {...input} autoFocus className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                        <label htmlFor="fullName" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Full Name*</label>
+                                    </span>
+                                    {getFormErrorMessage(meta)}
+                                </div>
+                            )} />
+
+                            {/* Email */}
+                            <Field name="email" render={({ input, meta }) => (
+                                <div className="field">
+                                    <span className="p-float-label p-input-icon-right">
+                                        <i className="pi pi-envelope" />
+                                        <InputText id="email" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                        <label htmlFor="email" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Email*</label>
+                                    </span>
+                                    {getFormErrorMessage(meta)}
+                                </div>
+                            )} />
+
+                            {/* Phone Number */}
+                            <Field name="phoneNumber" render={({ input, meta }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <InputText id="phoneNumber" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                        <label htmlFor="phoneNumber" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Phone Number</label>
+                                    </span>
+                                    {getFormErrorMessage(meta)}
+                                </div>
+                            )} />
+
+                                    {/* Birthday */}
+                            <Field name="date" render={({ input }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <Calendar id="date" {...input} dateFormat="dd/mm/yy" mask="99/99/9999" showIcon className="p-inputtext" />
+                                        <label htmlFor="date">Birthday</label>
+                                    </span>
+                                </div>
+                            )} />
+
+                            {/* Password */}
+                            <Field name="password" render={({ input, meta }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <Password id="password" {...input} toggleMask className={classNames({ 'p-invalid': isFormFieldValid(meta) })} header={passwordHeader} footer={passwordFooter} />
+                                        <label htmlFor="password" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Password*</label>
+                                    </span>
+                                    {getFormErrorMessage(meta)}
+                                </div>
+                            )} />
+
+                            {/* Comment */}
+                            <Field name="comment" render={({ input }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <InputText id="comment" {...input} className="p-inputtext" />
+                                        <label htmlFor="comment">Comment</label>
+                                    </span>
+                                </div>
+                            )} />
+
+                            {/* Accept Terms */}
+                            <Field name="accept" type="checkbox" render={({ input, meta }) => (
+                                <div className="field-checkbox">
+                                    <Checkbox inputId="accept" {...input} className={classNames({ 'p-invalid': isFormFieldValid(meta) })} />
+                                    <label htmlFor="accept" className={classNames({ 'p-error': isFormFieldValid(meta) })}>I agree to the terms and conditions*</label>
+                                </div>
+                            )} />
+
+                            <Button type="submit" label="Submit" className="mt-2" />
+                        </form>
                     )} />
                 </div>
-                <div className="p-field-checkbox">
-                    <Field name="termsAccepted" component={Checkbox} />
-                    <label htmlFor="termsAccepted">I accept the terms and conditions</label>
-                </div>
-                <Button type="submit" label="Submit" className="p-mt-2" />
-                <Dialog visible={showMessage} style={{ width: '450px' }} header="Booking Details" onHide={() => setShowMessage(false)}>
-                    <div className="p-fluid p-formgrid p-grid">
-                        <div className="p-field p-col-12">
-                            <label htmlFor="fullName">Full Name</label>
-                            <InputText id="fullName" value={formData.fullName} readOnly />
-                        </div>
-                        <div className="p-field p-col-12">
-                            <label htmlFor="email">Email</label>
-                            <InputText id="email" value={formData.email} readOnly />
-                        </div>
-                        <div className="p-field p-col-12">
-                            <label htmlFor="phoneNumber">Phone Number</label>
-                            <InputText id="phoneNumber" value={formData.phoneNumber} readOnly />
-                        </div>
-                    </div>
-                </Dialog>
-            </form>
+            </div>
         </div>
-    )}
-/>
-);
-
+    );
 };
 
 export default BookingComponent;
