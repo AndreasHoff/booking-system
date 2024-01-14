@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Bookings from '../components/Bookings';
+import { FinalForm } from '../components/FinalForm';
 import Settings from '../components/Settings';
 import { auth, db } from '../firebase';
 import '../styles/Dashboard.css';
@@ -123,9 +124,9 @@ const Dashboard = () => {
                         <span className='material-icons-sharp'>inventory</span>
                         <h3>Bookings</h3>
                     </button>
-                    <button type="button">
+                    <button type="button" className={activeMenuItem('final-form')} onClick={() => handleSectionChange('final-form')}>
                         <span className='material-icons-sharp'>report_gmailerrorred</span>
-                        <h3>Reports</h3>
+                        <h3>Final form</h3>
                     </button>
                     <button type="button" className={activeMenuItem('settings')} onClick={() => handleSectionChange('settings')}>
                         <span className='material-icons-sharp'>settings</span>
@@ -145,6 +146,10 @@ const Dashboard = () => {
 
             {currentSection === 'settings' && (
                 <Settings />
+            )}
+
+            {currentSection === 'final-form' && (
+                <FinalForm />
             )}
 
             {currentSection === 'analytics' && (
