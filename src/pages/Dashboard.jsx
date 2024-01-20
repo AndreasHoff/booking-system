@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
+import { collection, getDocs, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -14,15 +14,17 @@ const Dashboard = () => {
     const [currentSection, setCurrentSection] = useState('analytics');
     const [totalBookings, setTotalBookings] = useState(0);
     const [recentBookings, setRecentBookings] = useState([]);
+    const [newBookingsCount, setNewBookingsCount] = useState(0);
 
     useEffect(() => {
-        const fetchTotalBookings = async () => {
-            const bookingCollection = collection(db, 'bookings');
-            const bookingSnapshot = await getDocs(bookingCollection);
+        const bookingCollection = collection(db, 'bookings');
+    
+        const unsubscribe = onSnapshot(bookingCollection, (bookingSnapshot) => {
             setTotalBookings(bookingSnapshot.size);
-        };
-
-        fetchTotalBookings();
+        });
+    
+        // Clean up the listener when the component unmounts
+        return () => unsubscribe();
     }, []);
 
     useEffect(() => {
@@ -37,14 +39,28 @@ const Dashboard = () => {
         fetchRecentBookings();
     }, []);
 
+    useEffect(() => {
+        const newBookingsQuery = query(
+            collection(db, 'bookings'),
+            where('status', '==', 'pending')
+        );
+    
+        const unsubscribe = onSnapshot(newBookingsQuery, (newBookingsSnapshot) => {
+            setNewBookingsCount(newBookingsSnapshot.size);
+        });
+    
+        // Clean up the listener when the component unmounts
+        return () => unsubscribe();
+    }, []);
+
     const handleSectionChange = (section) => {
         setCurrentSection(section);
-      };
+    };
 
       const activeMenuItem = (section) => {
         const isActive = currentSection === section
         return isActive ? 'active' : '';
-      };
+    };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -117,11 +133,11 @@ const Dashboard = () => {
                     <button type="button">
                         <span className='material-icons-sharp'>mail_outline</span>
                         <h3>Tickets</h3>
-                        <span className='message-count'>27</span>
                     </button>
                     <button type="button" className={activeMenuItem('bookings')} onClick={() => handleSectionChange('bookings')}>
                         <span className='material-icons-sharp'>inventory</span>
                         <h3>Bookings</h3>
+                        <span className='message-count'>{newBookingsCount}</span>
                     </button>
                     <button type="button">
                         <span className='material-icons-sharp'>report_gmailerrorred</span>
