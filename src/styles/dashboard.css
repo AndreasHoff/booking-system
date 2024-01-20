@@ -184,6 +184,10 @@ aside .sidebar button.active {
     margin-left: 0;
 }
 
+aside .sidebar button.active span.message-count {
+    color: white;
+}
+
 aside .sidebar button.active::before {
     content: '';
     width: 6px;
@@ -197,7 +201,7 @@ aside .sidebar button.active span {
 }
 
 aside .sidebar button:hover span {
-    margin-left: 0.6rem;
+    margin-left: 5px;
 }
 
 aside .sidebar .message-count {

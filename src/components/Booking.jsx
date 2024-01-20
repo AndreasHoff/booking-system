@@ -56,12 +56,22 @@ const BookingComponent = () => {
         const firebaseData = {
             fullName,
             email,
-            phoneNumber: data.phoneNumber,
-            comment: data.comment,
-            termsAccepted,
-            selectedCategory: data.selectedCategory,
-            selectedService: data.selectedService,
-            selectedDate: data.date,
+            phoneNumber,
+            comment,
+            createdAt: serverTimestamp(),
+            status: 'pending'
+        });
+
+        const data = {
+            fullName: fullName,
+            email: email,
+            phoneNumber: phoneNumber,
+            comment: comment,
+            termsAccepted: termsAccepted,
+            selectedCategory: selectedCategory,
+            selectedService: selectedService,
+            selectedDate: selectedDate,
+            status: 'pending'
         };
 
         setDialogData({ fullName, email }); // Set data for the dialog
