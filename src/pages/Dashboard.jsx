@@ -16,6 +16,15 @@ const Dashboard = () => {
     const [recentBookings, setRecentBookings] = useState([]);
     const [newBookingsCount, setNewBookingsCount] = useState(0);
 
+    const handleSectionChange = (section) => {
+        setCurrentSection(section);
+    };
+
+      const activeMenuItem = (section) => {
+        const isActive = currentSection === section
+        return isActive ? 'active' : '';
+    };
+
     useEffect(() => {
         const bookingCollection = collection(db, 'bookings');
     
@@ -52,15 +61,6 @@ const Dashboard = () => {
         // Clean up the listener when the component unmounts
         return () => unsubscribe();
     }, []);
-
-    const handleSectionChange = (section) => {
-        setCurrentSection(section);
-    };
-
-      const activeMenuItem = (section) => {
-        const isActive = currentSection === section
-        return isActive ? 'active' : '';
-    };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
