@@ -80,6 +80,7 @@ const Booking = () => {
             phoneNumber,
             comment,
             createdAt: serverTimestamp(),
+            status: 'pending'
         });
 
         const data = {
@@ -90,7 +91,8 @@ const Booking = () => {
             termsAccepted: termsAccepted,
             selectedCategory: selectedCategory,
             selectedService: selectedService,
-            selectedDate: selectedDate
+            selectedDate: selectedDate,
+            status: 'pending'
         };
         
         writeToFirebase(data);
