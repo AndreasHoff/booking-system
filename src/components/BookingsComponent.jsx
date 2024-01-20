@@ -4,7 +4,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import '../styles/Bookings.css'; // Assuming you have a CSS file for styles
+import '../styles/BookingsComponent.css';
 
 const Bookings = () => {
     const [bookings, setBookings] = useState([]);

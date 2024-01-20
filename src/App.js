@@ -4,7 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BookingComponent from './components/BookingComponent';
-import Navbar from './components/Navbar';
+import Navbar from './components/NavbarComponent';
 import ToastManager from './components/ToastManager';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';

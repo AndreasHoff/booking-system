@@ -1,7 +1,7 @@
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { db } from '../firebase';
-import '../styles/Settings.css';
+import '../styles/SettingsComponent.css';
 
 const Settings = () => {
     // Define state variables for the category, services array, service name, and description

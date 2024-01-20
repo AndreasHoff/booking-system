@@ -103,81 +103,83 @@ const BookingComponent = () => {
      return (
         <div className="booking-container">
             <Toast ref={toast} />
-            <div>
+            <div className="booking-form-container">
+                <div className='card'>
+                    <div>
+                        <label>Select a category</label>
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => handleCategoryChange(e.target.value)}
+                        >
+                            <option value="">
+                                Choose a category
+                            </option>
+                            {categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                                {category.id}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                {selectedCategory && (
                 <div>
-                    <label>Select a category</label>
-                    <select
-                        value={selectedCategory}
-                        onChange={(e) => handleCategoryChange(e.target.value)}
-                    >
-                        <option value="">
-                            Choose a category
-                        </option>
-                        {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                            {category.id}
-                        </option>
-                        ))}
-                    </select>
-                </div>
-            {selectedCategory && (
-            <div>
-            <label>Select a service</label>
-            <select 
-                value={selectedServiceId} 
-                onChange={(e) => {
-                    const selectedServiceObject = categories
-                        .find((category) => category.id === selectedCategory)
-                        .services
-                        .find((service) => service.id === e.target.value);
-                    if (selectedServiceObject) {
-                        setSelectedService(selectedServiceObject.name);
-                        setSelectedServiceId(selectedServiceObject.id);
-                    } else {
-                        setSelectedService(null);
-                        setSelectedServiceId(null);
-                    }
-                }}
-            >
-                <option value="">
-                    Choose a service
-                </option>
-                {categories
-                    .find((category) => category.id === selectedCategory)
-                    .services
-                    .map((service) => (
-                        <option key={service.id} value={service.id}>
-                            {service.name}
-                        </option>
-                    ))
-                }
-            </select>
-            {selectedService && (
-                <p>
+                <label>Select a service</label>
+                <select 
+                    value={selectedServiceId} 
+                    onChange={(e) => {
+                        const selectedServiceObject = categories
+                            .find((category) => category.id === selectedCategory)
+                            .services
+                            .find((service) => service.id === e.target.value);
+                        if (selectedServiceObject) {
+                            setSelectedService(selectedServiceObject.name);
+                            setSelectedServiceId(selectedServiceObject.id);
+                        } else {
+                            setSelectedService(null);
+                            setSelectedServiceId(null);
+                        }
+                    }}
+                >
+                    <option value="">
+                        Choose a service
+                    </option>
                     {categories
                         .find((category) => category.id === selectedCategory)
                         .services
-                        .find((service) => service.name === selectedService)
-                        .description}
-                </p>
-            )}
-        </div>
-    )}
-            <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
-            <h2>Personal Information</h2>
-            <form onSubmit={(e) => e.preventDefault()} className="booking-form">
-                <input type="text" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input type="tel" placeholder="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                <textarea placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)} />
-                <label>
-                    <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} />
-                    I accept the terms
-                </label>
-                <button type="button" onClick={handleConfirm}>
-                    Confirm
-                </button>
-            </form>
+                        .map((service) => (
+                            <option key={service.id} value={service.id}>
+                                {service.name}
+                            </option>
+                        ))
+                    }
+                </select>
+                {selectedService && (
+                    <p>
+                        {categories
+                            .find((category) => category.id === selectedCategory)
+                            .services
+                            .find((service) => service.name === selectedService)
+                            .description}
+                    </p>
+                )}
+            </div>
+        )}
+                <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+                <h2>Personal Information</h2>
+                <form onSubmit={(e) => e.preventDefault()} className="booking-form">
+                    <input type="text" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                    <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input type="tel" placeholder="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                    <textarea placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)} />
+                    <label>
+                        <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} />
+                        I accept the terms
+                    </label>
+                    <button type="button" onClick={handleConfirm}>
+                        Confirm
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
     );

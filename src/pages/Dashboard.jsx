@@ -3,8 +3,8 @@ import { collection, getDocs, limit, onSnapshot, orderBy, query, where } from 'f
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Bookings from '../components/Bookings';
-import Settings from '../components/Settings';
+import Bookings from '../components/BookingsComponent';
+import Settings from '../components/SettingsComponent';
 import { auth, db } from '../firebase';
 import '../styles/Dashboard.css';
 

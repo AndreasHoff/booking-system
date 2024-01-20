@@ -1,17 +1,16 @@
-.booking-form-container {
-    margin-top: 5rem;
+.booking-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .booking-form-container .card {
     min-width: 450px;
-    background: #ffff;
+    background: #ffe1e1;
     padding: 2rem;
     border-radius: 10px;
     margin-bottom: 2rem;
-}
-
-h5 {
-    font-size: 1.25rem;
 }
 
 .booking-form-container .card form {
@@ -20,9 +19,6 @@ h5 {
 
 .booking-form-container .card .field {
     margin-bottom: 1.5rem;
-    &:first-child {
-        margin-bottom: 2rem;
-    }
 }
 
 .p-inputtext {
