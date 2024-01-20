@@ -26,13 +26,14 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        const fetchTotalBookings = async () => {
-            const bookingCollection = collection(db, 'bookings');
-            const bookingSnapshot = await getDocs(bookingCollection);
+        const bookingCollection = collection(db, 'bookings');
+    
+        const unsubscribe = onSnapshot(bookingCollection, (bookingSnapshot) => {
             setTotalBookings(bookingSnapshot.size);
-        };
-
-        fetchTotalBookings();
+        });
+    
+        // Clean up the listener when the component unmounts
+        return () => unsubscribe();
     }, []);
 
     useEffect(() => {
@@ -52,11 +53,11 @@ const Dashboard = () => {
             collection(db, 'bookings'),
             where('status', '==', 'pending')
         );
-
+    
         const unsubscribe = onSnapshot(newBookingsQuery, (newBookingsSnapshot) => {
             setNewBookingsCount(newBookingsSnapshot.size);
         });
-
+    
         // Clean up the listener when the component unmounts
         return () => unsubscribe();
     }, []);
