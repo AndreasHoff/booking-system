@@ -10,18 +10,19 @@
     margin-bottom: 2rem;
 }
 
-h5{
+h5 {
     font-size: 1.25rem;
 }
+
 .booking-form-container .card form {
     margin-top: 2rem;
 }
+
 .booking-form-container .card .field {
     margin-bottom: 1.5rem;
-
     &:first-child {
         margin-bottom: 2rem;
-      }
+    }
 }
 
 .p-inputtext {
@@ -36,12 +37,12 @@ h5{
     border-radius: 6px;
 }
 
-
 @media screen and (max-width: 960px) {
     .booking-form-container .card {
         width: 80%;
     }
 }
+
 @media screen and (max-width: 640px) {
     .booking-form-container .card {
         width: 100%;

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import BookingComponent from './components/Booking';
+import BookingComponent from './components/BookingComponent';
 import Navbar from './components/Navbar';
 import ToastManager from './components/ToastManager';
 import Dashboard from './pages/Dashboard';
