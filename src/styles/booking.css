@@ -1,58 +1,50 @@
-.booking-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.booking-form-container {
+    margin-top: 5rem;
 }
 
-.booking-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.booking-form-container .card {
+    min-width: 450px;
+    background: #ffff;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
 }
 
-.booking-form select option {
-    color: black;
-    /* Or any color that contrasts with your background */
+h5{
+    font-size: 1.25rem;
+}
+.booking-form-container .card form {
+    margin-top: 2rem;
+}
+.booking-form-container .card .field {
+    margin-bottom: 1.5rem;
+
+    &:first-child {
+        margin-bottom: 2rem;
+      }
 }
 
-.tooltip {
-    visibility: hidden;
-    width: 120px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
+.p-inputtext {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 1rem;
+    color: #495057;
+    background: #ffffff;
+    padding: 0.75rem 0.75rem;
+    border: 1px solid #ced4da;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
     border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0;
-    transition: opacity 0.3s;
 }
 
-.tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
 
-td:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
+@media screen and (max-width: 960px) {
+    .booking-form-container .card {
+        width: 80%;
+    }
 }
-
-.tippy-box[data-theme~='custom'] {
-    background-color: #333;
-    color: white;
-    border-radius: 4px;
-    padding: 10px;
-    max-width: 500px;
+@media screen and (max-width: 640px) {
+    .booking-form-container .card {
+        width: 100%;
+        min-width: 0;
+    }
 }
