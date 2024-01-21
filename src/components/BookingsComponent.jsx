@@ -1,4 +1,4 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -16,7 +16,7 @@ const Bookings = () => {
         const fetchBookings = async () => {
             const bookingCollection = collection(db, 'bookings');
             const bookingSnapshot = await getDocs(bookingCollection);
-            const bookingList = bookingSnapshot.docs.map((doc, index) => ({...doc.data(), index}));
+            const bookingList = bookingSnapshot.docs.map((doc, index) => ({...doc.data(), index, id: doc.id}));
             setBookings(bookingList);
         };
     
@@ -54,14 +54,36 @@ const Bookings = () => {
         );
     }
 
+    const updateStatus = async (rowData) => {
+        if (rowData.status === 'pending') {
+            const bookingRef = doc(db, 'bookings', rowData.id);
+            await updateDoc(bookingRef, {
+                status: 'accepted'
+            });
+            setBookings(bookings.map(booking => booking.id === rowData.id ? {...booking, status: 'accepted'} : booking));
+        }
+    }
+
     return (
         <DataTable value={bookings} className={`bookings-table ${isAnyRowExpanded ? 'button-clicked' : ''}`}>
             <Column headerStyle={{backgroundColor: '#9fffe2'}} field='service' header='Service' />
             <Column headerStyle={{backgroundColor: '#9fffe2'}} field='date' header='Date' />
             <Column headerStyle={{backgroundColor: '#9fffe2'}} field='fullName' header='Name' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='email' header='Email' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='phoneNumber' header='Number' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} body={commentBodyTemplate} header='Comment' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} className='email' field='email' header='Email' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='phoneNumber' header='Number' className='number' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} body={commentBodyTemplate} header='Comment' className='comment' />
+            <Column headerStyle={{backgroundColor: '#9fffe2'}} 
+            body={rowData => {
+                if (rowData.status === 'pending') {
+                    return <button onClick={() => updateStatus(rowData)} className="status-button pending">Pending</button>;
+                } else if (rowData.status === 'cancelled') {
+                    return <button className="status-button cancelled">Cancelled</button>;
+                } else if (rowData.status === 'accepted') {
+                    return <button className="status-button accepted">Accepted</button>;
+                }
+            }} 
+            header='Status'
+            />
             <Column headerStyle={{backgroundColor: '#9fffe2'}} body={readMoreBodyTemplate} header='' />
         </DataTable>
     );

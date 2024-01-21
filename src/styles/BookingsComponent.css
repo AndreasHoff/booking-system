@@ -34,3 +34,27 @@
 .p-button:focus {
     box-shadow: 0 0 0 0.1rem #a6d5fa;
 }
+
+.email {
+    text-overflow: ellipsis;
+    width: 20ch;
+}
+
+.number {
+    width: 20px;
+}
+
+.status-button.pending {
+    background-color: yellow;
+    /* other styles */
+}
+
+.status-button.cancelled {
+    background-color: red;
+    /* other styles */
+}
+
+.status-button.accepted {
+    background-color: green;
+    /* other styles */
+}
