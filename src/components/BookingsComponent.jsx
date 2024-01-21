@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -15,7 +15,8 @@ const Bookings = () => {
     useEffect(() => {
         const fetchBookings = async () => {
             const bookingCollection = collection(db, 'bookings');
-            const bookingSnapshot = await getDocs(bookingCollection);
+            const bookingQuery = query(bookingCollection, orderBy('createdAt', 'desc'));
+            const bookingSnapshot = await getDocs(bookingQuery);
             const bookingList = bookingSnapshot.docs.map((doc, index) => ({...doc.data(), index, id: doc.id}));
             setBookings(bookingList);
         };
