@@ -1,8 +1,8 @@
 // JSX
-import React, { useEffect, useState } from 'react';
 import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
 import { Dropdown } from 'primereact/dropdown';
+import React, { useEffect, useState } from 'react';
+import { db } from '../firebase';
 import '../styles/BookingsComponent.css';
 
 const Bookings = () => {
@@ -31,15 +31,17 @@ const Bookings = () => {
     });
   };
 
-  const updateStatus = async (id, status) => {
-    const bookingRef = doc(db, 'bookings', id);
-    await updateDoc(bookingRef, {
-      status: status,
-    });
-    setBookings((prevBookings) =>
-      prevBookings.map((booking) => (booking.id === id ? { ...booking, status: status } : booking))
-    );
-  };
+const updateStatus = async (id, status, event) => {
+event.stopPropagation();
+
+const bookingRef = doc(db, 'bookings', id);
+await updateDoc(bookingRef, {
+    status: status,
+});
+setBookings((prevBookings) =>
+    prevBookings.map((booking) => (booking.id === id ? { ...booking, status: status } : booking))
+);
+};
 
   const statusOptions = [
     { label: 'Pending', value: 'pending' },
@@ -72,13 +74,14 @@ const Bookings = () => {
                 <td>{rowData.fullName}</td>
                 <td>{rowData.email}</td>
                 <td>{rowData.phoneNumber}</td>
-                <td>
-                  <Dropdown
+                <td onClick={(e) => e.stopPropagation()}>
+                <Dropdown
                     value={rowData.status}
                     options={statusOptions}
-                    onChange={(e) => updateStatus(rowData.id, e.value)}
+                    onChange={(e) => updateStatus(rowData.id, e.value, e.originalEvent)}
                     placeholder="Select Status"
-                  />
+                    className={`status-dropdown status-${rowData.status}`}
+                />
                 </td>
               </tr>
               {expandedRows[index] && (

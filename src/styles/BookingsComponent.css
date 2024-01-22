@@ -1,32 +1,49 @@
-/* BookingsComponent.css */
-
 .bookings-container {
     padding: 10px;
-  }
-  
-  .bookings-table {
+}
+
+.bookings-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-  }
-  
-  .bookings-table th,
-  .bookings-table td {
+}
+
+.bookings-table th,
+.bookings-table td {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
-  }
+}
 
-  .booking-row:hover {
+.booking-row:hover {
     cursor: pointer;
     background-color: #ffabab;
-  }
-  
-  .chevron-button {
-    cursor: pointer;
-  }
-  
-  .expanded-details {
+}
+
+.expanded-details {
     padding: 10px;
-  }
-  
+}
+
+.status-dropdown {
+    border: 1px solid #ccc;
+}
+
+.p-inputtext {
+    border: none;
+}
+
+.status-dropdown .p-dropdown-label {
+    color: inherit;
+}
+
+.status-accepted .p-dropdown-label {
+    color: green;
+}
+
+.status-pending .p-dropdown-label {
+    color: yellow;
+}
+
+.status-declined .p-dropdown-label {
+    color: red;
+}
