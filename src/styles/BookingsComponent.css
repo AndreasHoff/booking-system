@@ -33,17 +33,25 @@
 }
 
 .status-dropdown .p-dropdown-label {
-    color: inherit;
+    background-color: inherit;
+    color: white;
 }
 
 .status-accepted .p-dropdown-label {
-    color: green;
+    background-color: green;
+    color: white;
 }
 
 .status-pending .p-dropdown-label {
-    color: yellow;
+    background-color: rgb(255, 219, 16);
+    color: white;
 }
 
 .status-declined .p-dropdown-label {
-    color: red;
+    color: white;
+    background-color: red;
+}
+
+.status-dropdown .p-dropdown-trigger {
+    display: none;
 }
