@@ -1,60 +1,32 @@
-.truncated-comment {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 20ch;
+/* BookingsComponent.css */
+
+.bookings-container {
+    padding: 10px;
+  }
+  
+  .bookings-table {
     width: 100%;
-    display: block;
-}
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .bookings-table th,
+  .bookings-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
 
-.full-comment {
-    width: 100%;
-    display: block;
-    word-break: break-all;
-}
-
-.bookings-table .p-datatable-tbody>tr:nth-child(even) {
-    background-color: #9fffe2;
-}
-
-.bookings-table {
-    user-select: text;
-}
-
-.button-clicked .p-datatable-tbody>tr>td:not(:last-child) {
-    vertical-align: top;
-}
-
-.chevron-button {
-    background: none;
-    border: none;
-    padding: 0;
-}
-
-.p-button:focus {
-    box-shadow: 0 0 0 0.1rem #a6d5fa;
-}
-
-.email {
-    text-overflow: ellipsis;
-    width: 20ch;
-}
-
-.number {
-    width: 20px;
-}
-
-.status-button.pending {
-    background-color: yellow;
-    /* other styles */
-}
-
-.status-button.cancelled {
-    background-color: red;
-    /* other styles */
-}
-
-.status-button.accepted {
-    background-color: green;
-    /* other styles */
-}
+  .booking-row:hover {
+    cursor: pointer;
+    background-color: #ffabab;
+  }
+  
+  .chevron-button {
+    cursor: pointer;
+  }
+  
+  .expanded-details {
+    padding: 10px;
+  }
+  

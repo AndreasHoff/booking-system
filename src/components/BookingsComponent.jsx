@@ -1,93 +1,101 @@
-import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
-import { Button } from 'primereact/button';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
+// JSX
 import React, { useEffect, useState } from 'react';
+import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { Dropdown } from 'primereact/dropdown';
 import '../styles/BookingsComponent.css';
 
 const Bookings = () => {
-    const [bookings, setBookings] = useState([]);
-    const [expandedRows, setExpandedRows] = useState({});
-    const [isButtonClicked, setIsButtonClicked] = useState(false);
-    const [isAnyRowExpanded, setIsAnyRowExpanded] = useState(false);
+  const [bookings, setBookings] = useState([]);
+  const [expandedRows, setExpandedRows] = useState([]);
+  const [isAnyRowExpanded, setIsAnyRowExpanded] = useState(false);
 
-    useEffect(() => {
-        const fetchBookings = async () => {
-            const bookingCollection = collection(db, 'bookings');
-            const bookingQuery = query(bookingCollection, orderBy('createdAt', 'desc'));
-            const bookingSnapshot = await getDocs(bookingQuery);
-            const bookingList = bookingSnapshot.docs.map((doc, index) => ({...doc.data(), index, id: doc.id}));
-            setBookings(bookingList);
-        };
-    
-        fetchBookings();
-    }, []);
-    
-    const commentBodyTemplate = (rowData) => {
-        return (
-            <div className={expandedRows[rowData.index] ? 'full-comment' : 'truncated-comment'} style={{width: expandedRows[rowData.index] ? '200px' : 'auto'}}>
-                {rowData.comment}
-            </div>
-        );
-    }
-    
-    const toggleRow = (e, rowData) => {
-        e.preventDefault();
-        setIsButtonClicked(!isButtonClicked);
-        setExpandedRows(prevState => {
-            const newState = {
-                ...prevState,
-                [rowData.index]: !prevState[rowData.index]
-            };
-            setIsAnyRowExpanded(Object.values(newState).includes(true));
-            return newState;
-        });
-    }
+  useEffect(() => {
+    const fetchBookings = async () => {
+      const bookingCollection = collection(db, 'bookings');
+      const bookingQuery = query(bookingCollection, orderBy('createdAt', 'desc'));
+      const bookingSnapshot = await getDocs(bookingQuery);
+      const bookingList = bookingSnapshot.docs.map((doc, index) => ({ ...doc.data(), index, id: doc.id }));
+      setBookings(bookingList);
+    };
 
-    const readMoreBodyTemplate = (rowData) => {
-        if (rowData.comment.length <= 20) {
-            return null;
-        }
-    
-        return (
-            <Button icon={expandedRows[rowData.index] ? 'pi pi-chevron-up' : 'pi pi-chevron-down'} className='p-button-rounded p-mr-2 chevron-button' onClick={(e) => toggleRow(e, rowData)} />
-        );
-    }
+    fetchBookings();
+  }, []);
 
-    const updateStatus = async (rowData) => {
-        if (rowData.status === 'pending') {
-            const bookingRef = doc(db, 'bookings', rowData.id);
-            await updateDoc(bookingRef, {
-                status: 'accepted'
-            });
-            setBookings(bookings.map(booking => booking.id === rowData.id ? {...booking, status: 'accepted'} : booking));
-        }
-    }
+  const toggleRow = (index) => {
+    setExpandedRows((prevExpandedRows) => {
+      const newExpandedRows = [...prevExpandedRows];
+      newExpandedRows[index] = !newExpandedRows[index];
+      setIsAnyRowExpanded(newExpandedRows.includes(true));
+      return newExpandedRows;
+    });
+  };
 
-    return (
-        <DataTable value={bookings} className={`bookings-table ${isAnyRowExpanded ? 'button-clicked' : ''}`}>
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='service' header='Service' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='date' header='Date' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='fullName' header='Name' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} className='email' field='email' header='Email' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} field='phoneNumber' header='Number' className='number' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} body={commentBodyTemplate} header='Comment' className='comment' />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} 
-            body={rowData => {
-                if (rowData.status === 'pending') {
-                    return <button onClick={() => updateStatus(rowData)} className="status-button pending">Pending</button>;
-                } else if (rowData.status === 'cancelled') {
-                    return <button className="status-button cancelled">Cancelled</button>;
-                } else if (rowData.status === 'accepted') {
-                    return <button className="status-button accepted">Accepted</button>;
-                }
-            }} 
-            header='Status'
-            />
-            <Column headerStyle={{backgroundColor: '#9fffe2'}} body={readMoreBodyTemplate} header='' />
-        </DataTable>
+  const updateStatus = async (id, status) => {
+    const bookingRef = doc(db, 'bookings', id);
+    await updateDoc(bookingRef, {
+      status: status,
+    });
+    setBookings((prevBookings) =>
+      prevBookings.map((booking) => (booking.id === id ? { ...booking, status: status } : booking))
     );
+  };
+
+  const statusOptions = [
+    { label: 'Pending', value: 'pending' },
+    { label: 'Accepted', value: 'accepted' },
+    { label: 'Declined', value: 'declined' },
+  ];
+
+  return (
+    <div className={`bookings-container ${isAnyRowExpanded ? 'button-clicked' : ''}`}>
+      <table className="bookings-table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Number</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bookings.map((rowData, index) => (
+            <React.Fragment key={index}>
+              <tr
+                onClick={() => toggleRow(index)}
+                className={`booking-row ${expandedRows[index] ? 'expanded' : ''}`}
+              >
+                <td>{rowData.service}</td>
+                <td>{rowData.date}</td>
+                <td>{rowData.fullName}</td>
+                <td>{rowData.email}</td>
+                <td>{rowData.phoneNumber}</td>
+                <td>
+                  <Dropdown
+                    value={rowData.status}
+                    options={statusOptions}
+                    onChange={(e) => updateStatus(rowData.id, e.value)}
+                    placeholder="Select Status"
+                  />
+                </td>
+              </tr>
+              {expandedRows[index] && (
+                <tr>
+                  <td colSpan="7">
+                    <div className="expanded-details">
+                      <p>{rowData.comment}</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 };
 
 export default Bookings;
