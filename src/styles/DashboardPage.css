@@ -184,7 +184,6 @@ aside .sidebar button span {
 aside .sidebar button:last-child {
     position: absolute;
     bottom: 2rem;
-    width: 100%;
 }
 
 aside .sidebar button.active {
@@ -363,13 +362,13 @@ main .recent-bookings table:hover {
     box-shadow: none;
 }
 
-main table tbody td {
+main table.dashboard-bookings tbody td {
     height: 2.8rem;
     border-bottom: 1px solid var(--color-light);
     color: dark var(--color-dark-variant)
 }
 
-main table tbody tr:last-child td {
+main table.dashboard-bookings tbody tr:last-child td {
     border: none;
 }
 

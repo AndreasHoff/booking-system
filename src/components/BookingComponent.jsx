@@ -154,6 +154,7 @@ const BookingComponent = () => {
                     }
                 </select>
                 {selectedService && (
+                    <div>
                     <p>
                         {categories
                             .find((category) => category.id === selectedCategory)
@@ -161,6 +162,14 @@ const BookingComponent = () => {
                             .find((service) => service.name === selectedService)
                             .description}
                     </p>
+                    <p>
+                        Price: {categories
+                            .find((category) => category.id === selectedCategory)
+                            .services
+                            .find((service) => service.name === selectedService)
+                            .price}
+                    </p>
+                </div>
                 )}
             </div>
         )}

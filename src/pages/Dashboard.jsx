@@ -99,7 +99,7 @@ const Dashboard = () => {
                 <>
                 <aside>
                 <div className='toggle'>
-                    <Link to='/'>
+                    <Link onClick={() => handleSectionChange('analytics')}>
                         <div className='logo'>
                             <img
                                 src='/images/logo.png'
@@ -230,7 +230,7 @@ const Dashboard = () => {
                  </div>
                  <div className='recent-bookings'>
                 <h2>Recent Bookings</h2>
-                <table>
+                <table className='dashboard-bookings'>
                     <thead>
                         <tr>
                             <th>Service</th>
@@ -247,7 +247,7 @@ const Dashboard = () => {
                                 <td>{booking.date}</td>
                                 <td>{booking.fullName}</td>
                                 <td>{booking.email}</td>
-                                <td>{booking.comment}</td>
+                                <td>{booking.status}</td>
                                 <td></td>
                             </tr>
                         ))}
