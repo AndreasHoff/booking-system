@@ -1,8 +1,9 @@
-import { onAuthStateChanged } from 'firebase/auth';
-import { collection, getDocs, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { addDoc, collection, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import ActivityLog from '../components/ActivityLog';
 import Bookings from '../components/Bookings';
 import Settings from '../components/Settings';
 import { auth, db } from '../firebase';
@@ -15,6 +16,8 @@ const Dashboard = () => {
     const [totalBookings, setTotalBookings] = useState(0);
     const [recentBookings, setRecentBookings] = useState([]);
     const [newBookingsCount, setNewBookingsCount] = useState(0);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
 
     const handleSectionChange = (section) => {
         setCurrentSection(section);
@@ -93,6 +96,22 @@ const Dashboard = () => {
         darkMode.querySelector('span:nth-child(2)').classList.toggle('active');
     };
 
+    const logout = async () => {
+        setIsLoggingOut(true);
+        try {
+            await signOut(auth);
+            const entry = `User logged out at ${new Date().toLocaleString()}`;
+            const data = { entry, timestamp: serverTimestamp() };
+            await addDoc(collection(db, 'activity-log', user.uid, 'user-trails'), data);
+            navigate('/login');
+            console.log('logout successfully');
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoggingOut(false);
+        }
+    };
+
     return (
         <div className='container'>
             {user ? (
@@ -122,32 +141,32 @@ const Dashboard = () => {
                         <span className='material-icons-sharp'>insights</span>
                         <h3>Analytics</h3>
                     </button>
-                    <button type="button" className={activeMenuItem('users')}>
+                    {/* <button type="button" className={activeMenuItem('users')}>
                         <span className='material-icons-sharp'>person_outline</span>
                         <h3>Users</h3>
-                    </button>
-                    <button type="button" className={activeMenuItem('activity-log')}>
+                    </button> */}
+                    <button type="button" className={activeMenuItem('activity-log')} onClick={() => handleSectionChange('activity-log')}>
                         <span className='material-icons-sharp'>receipt_long</span>
                         <h3>Activity Log</h3>
                     </button>
-                    <button type="button">
+                    {/* <button type="button">
                         <span className='material-icons-sharp'>mail_outline</span>
                         <h3>Tickets</h3>
-                    </button>
+                    </button> */}
                     <button type="button" className={activeMenuItem('bookings')} onClick={() => handleSectionChange('bookings')}>
                         <span className='material-icons-sharp'>inventory</span>
                         <h3>Bookings</h3>
                         <span className='message-count'>{newBookingsCount}</span>
                     </button>
-                    <button type="button">
+                    {/* <button type="button">
                         <span className='material-icons-sharp'>report_gmailerrorred</span>
                         <h3>Reports</h3>
-                    </button>
+                    </button> */}
                     <button type="button" className={activeMenuItem('settings')} onClick={() => handleSectionChange('settings')}>
                         <span className='material-icons-sharp'>settings</span>
                         <h3>Settings</h3>
                     </button>
-                    <button type="button">
+                    <button onClick={logout} type="button" disabled={isLoggingOut}>
                         <span className='material-icons-sharp'>logout</span>
                         <h3>Logout</h3>
                     </button>
@@ -161,6 +180,10 @@ const Dashboard = () => {
 
             {currentSection === 'settings' && (
                 <Settings />
+            )}
+
+            {currentSection === 'activity-log' && (
+                <ActivityLog />
             )}
 
             {currentSection === 'analytics' && (

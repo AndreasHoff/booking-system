@@ -1,5 +1,4 @@
-// JSX
-import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { Dropdown } from 'primereact/dropdown';
 import { Paginator } from 'primereact/paginator';
 import React, { useEffect, useState } from 'react';
@@ -50,12 +49,22 @@ const Bookings = () => {
 
     const updateStatus = async (id, status, event) => {
         event.stopPropagation();
-
+    
         const bookingRef = doc(db, 'bookings', id);
         await updateDoc(bookingRef, {
             status: status,
         });
-
+    
+        console.log(`Booking ${id} status changed to ${status}`); // Log a message to the console
+    
+        const entry = `Booking ${id} status changed to ${status} at ${new Date().toLocaleString()}`;
+    
+        // Add the entry to the 'bookings-status-changes' collection
+        await addDoc(collection(db, 'bookings-status-changes'), { entry, timestamp: serverTimestamp() });
+    
+        // Add the entry to the 'user-trail' collection
+        await addDoc(collection(db, 'user-trail'), { entry, timestamp: serverTimestamp() });
+    
         setBookings((prevBookings) =>
             prevBookings.map((booking) => (booking.id === id ? { ...booking, status: status } : booking))
         );

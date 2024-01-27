@@ -19,6 +19,7 @@ const Booking = () => {
     const [isAccordionOpen, setAccordionOpen] = useState(false);
     const { t: translate, i18n } = useTranslation();
     const toast = useRef(null);
+
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'categories'), async (snapshot) => {
             const categoriesData = [];
@@ -32,11 +33,13 @@ const Booking = () => {
         i18n.changeLanguage('da');
         return () => unsubscribe();
     }, [i18n]);
+
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
         setSelectedService(''); // Reset selected service when category changes
         setAccordionOpen(!isAccordionOpen); // Toggle accordion open/close
     };
+
     const resetForm = () => {
         setSelectedCategory('');
         setSelectedService('');
@@ -49,6 +52,7 @@ const Booking = () => {
         setTermsAccepted(false);
         setAccordionOpen(false);
     };
+
     const handleConfirm = async () => {
         if (!termsAccepted) {
             alert(translate('booking.accept_terms.alert'));

@@ -1,7 +1,8 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import '../styles/Login.css';
 
 const Login = () => {
@@ -11,20 +12,24 @@ const Login = () => {
 
     const login = (e) => {
         e.preventDefault();
-        signInWithEmailAndPassword( auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            console.log(user);
-            navigate('/dashboard');
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // Handle errors here
-            console.log(errorCode, errorMessage);
-        });
+    
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                // Log user login activity
+                const entry = `User logged in at ${new Date().toLocaleString()}`;
+                const data = { entry, timestamp: serverTimestamp() };
+                addDoc(collection(db, 'activity-log', user.uid, 'user-trails'), data);
+                console.log(user);
+                navigate('/dashboard');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // Handle errors here
+                console.log(errorCode, errorMessage);
+            });
     };
 
     return (
