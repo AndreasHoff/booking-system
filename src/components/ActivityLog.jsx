@@ -1,28 +1,23 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../AuthProvider';
 import { db } from '../firebase'; // replace with your firebase import
 
-const ActivityLog = () => {
+
+const ActivityLog = ({ userId }) => {
     const [logs, setLogs] = useState([]);
+    const user = useAuth(); // Use the useAuth hook to get the authentication state
+
 
     const fetchLogs = async () => {
         try {
-            console.log("Fetching documents from 'activity-log'...");
-            const userSnapshot = await getDocs(collection(db, 'activity-log'));
-            console.log("Fetched documents from 'activity-log'");
-            if (!userSnapshot.empty) {
-                for (const userDoc of userSnapshot.docs) {
-                    console.log(`Fetching 'user-trails' documents under document ${userDoc.id}...`);
-                    const logSnapshot = await getDocs(collection(db, 'activity-log', userDoc.id, 'user-trails'));
-                    console.log(`Fetched 'user-trails' documents under document ${userDoc.id}`);
-                    logSnapshot.docs.forEach(logDoc => {
-                        const data = { id: logDoc.id, ...logDoc.data() };
-                        console.log(data); // log the data
-                    });
-                }
-            } else {
-                console.log("'activity-log' collection is empty");
-            }
+            console.log(`Fetching 'user-trails' documents under document ${user.uid}...`);
+            const logSnapshot = await getDocs(query(collection(db, 'activity-log', user.uid, 'user-trails'), orderBy('timestamp', 'desc')));
+            console.log(`Fetched 'user-trails' documents under document ${user.uid}`);
+            const logs = logSnapshot.docs.map(logDoc => {
+                return { id: logDoc.id, ...logDoc.data() };
+            });
+            setLogs(logs);
         } catch (error) {
             console.error("Error fetching logs: ", error);
         }
@@ -33,12 +28,10 @@ const ActivityLog = () => {
     }, []);
 
     return (
-        <div className="activity-log">
-            {logs.map((log, index) => (
-                <div key={index}>
-                    <h3>Log {index + 1}</h3>
-                    <p>ID: {log.entry}</p>
-                    {/* Display other fields here */}
+        <div>
+            {logs.map(log => (
+                <div key={log.id}>
+                    <h2>{log.change}</h2> {/* Replace 'title' with the actual property name */}
                 </div>
             ))}
         </div>

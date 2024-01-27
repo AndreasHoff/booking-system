@@ -100,8 +100,8 @@ const Dashboard = () => {
         setIsLoggingOut(true);
         try {
             await signOut(auth);
-            const entry = `User logged out at ${new Date().toLocaleString()}`;
-            const data = { entry, timestamp: serverTimestamp() };
+            const change = `User logged out at ${new Date().toLocaleString()}`;
+            const data = { change, timestamp: serverTimestamp() };
             await addDoc(collection(db, 'activity-log', user.uid, 'user-trails'), data);
             navigate('/login');
             console.log('logout successfully');

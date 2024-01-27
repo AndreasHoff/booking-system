@@ -18,8 +18,8 @@ const Login = () => {
                 // Signed in 
                 const user = userCredential.user;
                 // Log user login activity
-                const entry = `User logged in at ${new Date().toLocaleString()}`;
-                const data = { entry, timestamp: serverTimestamp() };
+                const change = `User logged in at ${new Date().toLocaleString()}`;
+                const data = { change, timestamp: serverTimestamp() };
                 addDoc(collection(db, 'activity-log', user.uid, 'user-trails'), data);
                 console.log(user);
                 navigate('/dashboard');
