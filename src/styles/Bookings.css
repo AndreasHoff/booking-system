@@ -22,19 +22,37 @@
 
 .expanded-details {
     padding: 10px;
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 0.2s ease-out;
+}
+
+.expanded-details.visible {
+    transform: scaleY(1);
 }
 
 .status-dropdown {
-    border: 1px solid #ccc;
+    border-radius: 10px;
 }
 
 .p-inputtext {
     border: none;
+    border-radius: 10px;
 }
 
-.status-dropdown .p-dropdown-label {
-    background-color: inherit;
+.status-dropdown.status-accepted {
+    background-color: green;
     color: white;
+}
+
+.status-dropdown.status-pending {
+    background-color: rgb(255, 219, 16);
+    color: white;
+}
+
+.status-dropdown.status-declined {
+    color: white;
+    background-color: red;
 }
 
 .status-accepted .p-dropdown-label {
@@ -50,8 +68,4 @@
 .status-declined .p-dropdown-label {
     color: white;
     background-color: red;
-}
-
-.status-dropdown .p-dropdown-trigger {
-    display: none;
 }

@@ -1,14 +1,17 @@
 // JSX
 import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
 import { Dropdown } from 'primereact/dropdown';
+import { Paginator } from 'primereact/paginator';
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import '../styles/BookingsComponent.css';
+import '../styles/Bookings.css';
 
 const Bookings = () => {
     const [bookings, setBookings] = useState([]);
     const [expandedRows, setExpandedRows] = useState([]);
     const [isAnyRowExpanded, setIsAnyRowExpanded] = useState(false);
+    const [first, setFirst] = useState(0);
+    const [rows, setRows] = useState(10);
 
     useEffect(() => {
         const fetchBookings = async () => {
@@ -20,6 +23,20 @@ const Bookings = () => {
     };
 
         fetchBookings();
+    }, []);
+
+    useEffect(() => {
+        const dropdownItems = document.querySelectorAll('.p-dropdown-items .p-dropdown-item');
+        dropdownItems.forEach(item => {
+            const text = item.textContent.trim();
+            if (text === 'Accepted') {
+                item.classList.add('status-accepted');
+            } else if (text === 'Pending') {
+                item.classList.add('status-pending');
+            } else if (text === 'Declined') {
+                item.classList.add('status-declined');
+            }
+        });
     }, []);
 
     const toggleRow = (index) => {
@@ -45,8 +62,8 @@ const Bookings = () => {
     };
 
     const statusOptions = [
-        { label: 'Pending', value: 'pending' },
         { label: 'Accepted', value: 'accepted' },
+        { label: 'Pending', value: 'pending' },
         { label: 'Declined', value: 'declined' },
     ];
 
@@ -64,7 +81,7 @@ const Bookings = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {bookings.map((rowData, index) => (
+                {bookings.slice(first, first + rows).map((rowData, index) => (
                     <React.Fragment key={index}>
                         <tr
                             onClick={() => toggleRow(index)}
@@ -76,28 +93,39 @@ const Bookings = () => {
                             <td>{rowData.email}</td>
                             <td>{rowData.phoneNumber}</td>
                             <td onClick={(e) => e.stopPropagation()}>
-                                <Dropdown
-                                    value={rowData.status}
-                                    options={statusOptions}
-                                    onChange={(e) => updateStatus(rowData.id, e.value, e.originalEvent)}
-                                    placeholder="Select Status"
-                                    className={`status-dropdown status-${rowData.status}`}
-                                />
+                            <Dropdown
+                                value={rowData.status}
+                                options={statusOptions}
+                                onChange={(e) => updateStatus(rowData.id, e.value, e.originalEvent)}
+                                placeholder="Select Status"
+                                className={`status-dropdown status-${rowData.status}`}
+                                optionLabel="label"
+                            />
                             </td>
                         </tr>
                         {expandedRows[index] && (
-                                <tr>
+                            <tr>
                                 <td colSpan="7">
-                                    <div className="expanded-details">
+                                    <div className={`expanded-details ${expandedRows[index] ? 'visible' : ''}`}>
                                         <p>{rowData.comment}</p>
                                     </div>
                                 </td>
-                                </tr>
+                            </tr>
                         )}
                     </React.Fragment>
                 ))}
                 </tbody>
             </table>
+            <Paginator 
+                first={first} 
+                rows={rows} 
+                totalRecords={bookings.length} 
+                onPageChange={(e) => {
+                    setFirst(e.first);
+                    setRows(e.rows);
+                }}
+                rowsPerPageOptions={[10, 15, 25]}
+            />
         </div>
     );
 };

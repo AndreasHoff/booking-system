@@ -3,10 +3,10 @@ import { collection, getDocs, limit, onSnapshot, orderBy, query, where } from 'f
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Bookings from '../components/BookingsComponent';
-import Settings from '../components/SettingsComponent';
+import Bookings from '../components/Bookings';
+import Settings from '../components/Settings';
 import { auth, db } from '../firebase';
-import '../styles/DashboardPage.css';
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -126,9 +126,9 @@ const Dashboard = () => {
                         <span className='material-icons-sharp'>person_outline</span>
                         <h3>Users</h3>
                     </button>
-                    <button type="button" className={activeMenuItem('history')}>
+                    <button type="button" className={activeMenuItem('activity-log')}>
                         <span className='material-icons-sharp'>receipt_long</span>
-                        <h3>History</h3>
+                        <h3>Activity Log</h3>
                     </button>
                     <button type="button">
                         <span className='material-icons-sharp'>mail_outline</span>

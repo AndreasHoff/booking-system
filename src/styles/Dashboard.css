@@ -170,10 +170,11 @@ aside .sidebar button {
     position: relative;
     transition: all 0.3s ease;
     background-color: var(--color-white);
-    &:hover {
-        color: var(--color-primary);
-        cursor: pointer;
-    }
+}
+
+aside .sidebar button:hover {
+    color: var(--color-primary);
+    cursor: pointer;
 }
 
 aside .sidebar button span {
@@ -223,7 +224,7 @@ aside .sidebar .message-count {
 }
 
 main {
-    margin-top: 1.4rem;
+    margin-top: 3.5rem;
 }
 
 main .analyse {

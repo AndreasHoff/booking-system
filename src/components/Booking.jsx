@@ -3,9 +3,9 @@ import { Toast } from 'primereact/toast';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { db } from '../firebase';
-import '../styles/BookingComponent.css';
+import '../styles/Booking.css';
 
-const BookingComponent = () => {
+const Booking = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedService, setSelectedService] = useState('');
@@ -193,4 +193,4 @@ const BookingComponent = () => {
     </div>
     );
 };
-export default BookingComponent;
+export default Booking;

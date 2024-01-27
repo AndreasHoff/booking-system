@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import BookingComponent from './components/BookingComponent';
-import Navbar from './components/NavbarComponent';
+import Booking from './components/Booking';
+import Navbar from './components/Navbar';
 import ToastManager from './components/ToastManager';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
@@ -19,7 +19,7 @@ const App = () => {
             <div className="mt-6">
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/booking" element={<BookingComponent />} />
+                    <Route path="/booking" element={<Booking />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register setJustRegistered={setJustRegistered} />} />
                     <Route path="/dashboard" element={<Dashboard />} />
