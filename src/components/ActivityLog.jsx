@@ -6,20 +6,31 @@ import { db } from '../firebase'; // replace with your firebase import
 
 const ActivityLog = ({ userId }) => {
     const [logs, setLogs] = useState([]);
+    const [bookingStatusChanges, setBookingStatusChanges] = useState([]);
     const user = useAuth(); // Use the useAuth hook to get the authentication state
 
 
     const fetchLogs = async () => {
         try {
-            console.log(`Fetching 'user-trails' documents under document ${user.uid}...`);
             const logSnapshot = await getDocs(query(collection(db, 'activity-log', user.uid, 'user-trails'), orderBy('timestamp', 'desc')));
-            console.log(`Fetched 'user-trails' documents under document ${user.uid}`);
             const logs = logSnapshot.docs.map(logDoc => {
                 return { id: logDoc.id, ...logDoc.data() };
             });
             setLogs(logs);
         } catch (error) {
             console.error("Error fetching logs: ", error);
+        }
+    };
+
+    const fetchBookingStatusChanges = async () => {
+        try {
+            const bookingStatusChangesSnapshot = await getDocs(query(collection(db, 'activity-log', user.uid, 'booking-status-changes'), orderBy('timestamp', 'desc')));
+            const bookingStatusChanges = bookingStatusChangesSnapshot.docs.map(bookingStatusChangesDoc => {
+                return { id: bookingStatusChangesDoc.id, ...bookingStatusChangesDoc.data() };
+            });
+            setBookingStatusChanges(bookingStatusChanges);
+        } catch (error) {
+            console.error("Error fetching booking status changes: ", error);
         }
     };
 
@@ -38,16 +49,27 @@ const ActivityLog = ({ userId }) => {
 
     useEffect(() => {
         fetchLogs();
+        fetchBookingStatusChanges();
     }, []);
 
     return (
         <div>
             <button onClick={deleteLogs}>Delete All Logs</button>
-            {logs.map(log => (
-                <div key={log.id}>
-                    <h2>{log.change}</h2> {/* Replace 'title' with the actual property name */}
-                </div>
-            ))}
+            <div>
+                {logs.map(log => (
+                    <div key={log.id}>
+                        <h2>{log.change}</h2> {/* Replace 'title' with the actual property name */}
+                    </div>
+                ))}
+            </div>
+            <div>
+                {bookingStatusChanges.map(log => (
+                    <div key={log.id}>
+                        <h2>{log.change}</h2> {/* Replace 'title' with the actual property name */}
+                    </div>
+                ))}
+            </div>
+            
         </div>
     );
 };

@@ -2,6 +2,7 @@ import { addDoc, collection, doc, getDocs, orderBy, query, serverTimestamp, upda
 import { Dropdown } from 'primereact/dropdown';
 import { Paginator } from 'primereact/paginator';
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../AuthProvider';
 import { db } from '../firebase';
 import '../styles/Bookings.css';
 
@@ -11,6 +12,8 @@ const Bookings = () => {
     const [isAnyRowExpanded, setIsAnyRowExpanded] = useState(false);
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
+    const user = useAuth(); // Use the useAuth hook to get the authentication state
+
 
     useEffect(() => {
         const fetchBookings = async () => {
@@ -57,13 +60,10 @@ const Bookings = () => {
     
         console.log(`Booking ${id} status changed to ${status}`); // Log a message to the console
     
-        const entry = `Booking ${id} status changed to ${status} at ${new Date().toLocaleString()}`;
-    
-        // Add the entry to the 'bookings-status-changes' collection
-        await addDoc(collection(db, 'bookings-status-changes'), { entry, timestamp: serverTimestamp() });
-    
+        const change = `Booking ${id} status changed to ${status} at ${new Date().toLocaleString()}`;
+
         // Add the entry to the 'user-trail' collection
-        await addDoc(collection(db, 'user-trail'), { entry, timestamp: serverTimestamp() });
+        await addDoc(collection(db, 'activity-log', user.uid, 'booking-status-changes'), { change, timestamp: serverTimestamp() });
     
         setBookings((prevBookings) =>
             prevBookings.map((booking) => (booking.id === id ? { ...booking, status: status } : booking))
