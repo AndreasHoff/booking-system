@@ -124,7 +124,7 @@ const Dashboard = () => {
                                 src='/images/logo.png'
                                 alt=''
                             />
-                            <h2>PFA<span className='danger'>Pension</span></h2>
+                            <h2>C&C<span className='danger'>Networks</span></h2>
                         </div>
                     </Link>
                     <div
@@ -317,10 +317,10 @@ const Dashboard = () => {
                 <div className='user-profile'>
                     <div className='logo'>
                         <img
-                            src='/images/logo.png'
+                            src='/images/consulting.png'
                             alt=''
                         />
-                        <h2>PFAPension</h2>
+                        <h2>C&C Networks</h2>
                         <p>Fullstack Web Developer</p>
                     </div>
                 </div>

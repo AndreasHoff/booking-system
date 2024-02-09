@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { db } from '../firebase';
 import '../styles/Booking.css';
 
-const Booking = () => {
+const Booking = (callback) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedService, setSelectedService] = useState('');
@@ -19,7 +19,7 @@ const Booking = () => {
     const [isAccordionOpen, setAccordionOpen] = useState(false);
     const { t: translate, i18n } = useTranslation();
     const toast = useRef(null);
-
+    
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'categories'), async (snapshot) => {
             const categoriesData = [];
@@ -34,10 +34,26 @@ const Booking = () => {
         return () => unsubscribe();
     }, [i18n]);
 
-    const handleCategoryChange = (category) => {
+
+    const handleCategoryChange = async (category) => {
         setSelectedCategory(category);
         setSelectedService(''); // Reset selected service when category changes
-        setAccordionOpen(!isAccordionOpen); // Toggle accordion open/close
+        setAccordionOpen(!isAccordionOpen);
+    };
+
+    const handleServiceChange = (e) => {
+        const selectedServiceObject = categories
+            .find((category) => category.id === selectedCategory)
+            .services
+            .find((service) => service.id === e.target.value);
+        if (selectedServiceObject) {
+            setSelectedService(selectedServiceObject.name);
+            setSelectedServiceId(selectedServiceObject.id);
+    
+        } else {
+            setSelectedService(null);
+            setSelectedServiceId(null);
+        }
     };
 
     const resetForm = () => {
@@ -69,7 +85,7 @@ const Booking = () => {
             return;
         }
     
-        await addDoc(collection(db, 'bookings'), {
+        const bookingData = {
             category: selectedCategory,
             service: selectedService,
             date: selectedDate,
@@ -79,29 +95,11 @@ const Booking = () => {
             comment,
             createdAt: serverTimestamp(),
             status: 'pending'
-        });
-
-        const data = {
-            fullName: fullName,
-            email: email,
-            phoneNumber: phoneNumber,
-            comment: comment,
-            termsAccepted: termsAccepted,
-            selectedCategory: selectedCategory,
-            selectedService: selectedService,
-            selectedDate: selectedDate,
-            status: 'pending'
         };
 
-        writeToFirebase(data);
-
+        await addDoc(collection(db, 'bookings'), bookingData);
         toast.current.show({severity:'success', summary: 'Successful Booking', detail:'Your booking has been confirmed', life: 3000});
-
         resetForm();
-        function writeToFirebase(data) {
-            console.log("Data being written to Firebase: ", data);
-        }
-    
     };
 
      return (
@@ -130,19 +128,7 @@ const Booking = () => {
                 <label>Select a service</label>
                 <select 
                     value={selectedServiceId} 
-                    onChange={(e) => {
-                        const selectedServiceObject = categories
-                            .find((category) => category.id === selectedCategory)
-                            .services
-                            .find((service) => service.id === e.target.value);
-                        if (selectedServiceObject) {
-                            setSelectedService(selectedServiceObject.name);
-                            setSelectedServiceId(selectedServiceObject.id);
-                        } else {
-                            setSelectedService(null);
-                            setSelectedServiceId(null);
-                        }
-                    }}
+                    onChange={handleServiceChange}
                 >
                     <option value="">
                         Choose a service
@@ -192,7 +178,7 @@ const Booking = () => {
                         Confirm
                     </button>
                 </form>
-            </div>
+            </div>  
         </div>
     </div>
     );
