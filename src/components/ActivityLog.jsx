@@ -1,5 +1,5 @@
 import { collection, deleteDoc, doc, getDocs, orderBy, query } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../AuthProvider';
 import { db } from '../firebase'; // replace with your firebase import
 
@@ -10,7 +10,7 @@ const ActivityLog = () => {
     const user = useAuth(); // Use the useAuth hook to get the authentication state
 
 
-    const fetchLogs = async () => {
+    const fetchLogs = useCallback(async () => {
         try {
             const logSnapshot = await getDocs(query(collection(db, 'activity-log', user.uid, 'user-trails'), orderBy('timestamp', 'desc')));
             const logs = logSnapshot.docs.map(logDoc => {
@@ -20,9 +20,9 @@ const ActivityLog = () => {
         } catch (error) {
             console.error("Error fetching logs: ", error);
         }
-    };
+    }, [user.uid]);
 
-    const fetchBookingStatusChanges = async () => {
+    const fetchBookingStatusChanges = useCallback(async () => {
         try {
             const bookingStatusChangesSnapshot = await getDocs(query(collection(db, 'activity-log', user.uid, 'booking-status-changes'), orderBy('timestamp', 'desc')));
             const bookingStatusChanges = bookingStatusChangesSnapshot.docs.map(doc => {
@@ -32,7 +32,7 @@ const ActivityLog = () => {
         } catch (error) {
             console.error("Error fetching booking status changes: ", error);
         }
-    };
+    }, [user.uid]);
 
     const deleteLogs = async () => {
         try {
@@ -59,7 +59,7 @@ const ActivityLog = () => {
     useEffect(() => {
         fetchLogs();
         fetchBookingStatusChanges();
-    }, [user.uid]);
+    }, [fetchLogs, fetchBookingStatusChanges]);
 
     return (
         <div>
