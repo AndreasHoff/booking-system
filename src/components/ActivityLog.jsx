@@ -1,7 +1,8 @@
 import { collection, deleteDoc, doc, getDocs, orderBy, query } from 'firebase/firestore';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../AuthProvider';
-import { db } from '../firebase'; // replace with your firebase import
+import { db } from '../firebase';
+import '../styles/ActivityLog.css';
 
 
 const ActivityLog = () => {
@@ -62,23 +63,25 @@ const ActivityLog = () => {
     }, [fetchLogs, fetchBookingStatusChanges]);
 
     return (
-        <div>
-            <button onClick={deleteLogs}>Delete All Logs</button>
-            <div>
+        <div className="activity-log">
+            <h1>Activity Log</h1>
+            <button className="delete-button" onClick={deleteLogs}>Delete All Logs</button>
+            <div className="log-section">
+                <h2>User Activity Logs</h2>
                 {logs.map(log => (
-                    <div key={log.id}>
-                        <h2>{log.change}</h2> {/* Replace 'title' with the actual property name */}
+                    <div key={log.id} className="log-item">
+                        <h3>{log.change}</h3> {/* Replace 'title' with the actual property name */}
                     </div>
                 ))}
             </div>
-            <div>
+            <div className="log-section">
+                <h2>Booking Status Changes</h2>
                 {bookingStatusChanges.map(log => (
-                    <div key={log.id}>
-                        <h2>{log.change}</h2> {/* Replace 'title' with the actual property name */}
+                    <div key={log.id} className="log-item">
+                        <h3>{log.change}</h3> {/* Replace 'title' with the actual property name */}
                     </div>
                 ))}
             </div>
-            
         </div>
     );
 };

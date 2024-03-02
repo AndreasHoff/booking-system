@@ -6,6 +6,8 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    box-shadow: 0 2rem 3rem var(--color-light);
+    background-color: white;
 }
 
 .bookings-table th,
@@ -13,6 +15,17 @@
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
+}
+
+.paginator {
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 0px;
+}
+
+.paginator span.p-dropdown-label {
+    background: transparent;
+    margin-top: -5px;
 }
 
 .booking-row:hover {

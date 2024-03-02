@@ -1,19 +1,33 @@
+.activity-log {
+    margin: auto;
+    padding: 20px;
+}
+
 .delete-button {
-    background-color: #f44336;
-    /* Red */
-    border: none;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: red;
     color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    border: none;
     cursor: pointer;
-    transition-duration: 0.4s;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
 }
 
 .delete-button:hover {
-    background-color: #d32f2f;
-    color: white;
+    background-color: darkred;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.log-section {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2rem 3rem var(--color-light);
+    background-color: white;
+}
+
+.log-item {
+    border-radius: 5px;
 }

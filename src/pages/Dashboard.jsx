@@ -252,34 +252,34 @@ const Dashboard = () => {
                      </div>
                  </div>
                  <div className='recent-bookings'>
-                <h2>Recent Bookings</h2>
-                <table className='dashboard-bookings'>
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Date</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Comment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {recentBookings.map((booking, index) => (
-                            <tr key={index}>
-                                <td>{booking.service}</td>
-                                <td>{booking.date}</td>
-                                <td>{booking.fullName}</td>
-                                <td>{booking.email}</td>
-                                <td>{booking.status}</td>
-                                <td></td>
+                    <h2>Recent Bookings</h2>
+                    <table className='dashboard-bookings'>
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            <button onClick={() => handleSectionChange('bookings')}>Show all</button>
-        </div>
-                 </>
-            )}
+                        </thead>
+                        <tbody>
+                            {recentBookings.map((booking, index) => (
+                                <tr key={index}>
+                                    <td>{booking.service}</td>
+                                    <td>{booking.date}</td>
+                                    <td>{booking.fullName}</td>
+                                    <td>{booking.email}</td>
+                                    <td>{booking.status}</td>
+                                    <td></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <button onClick={() => handleSectionChange('bookings')}>Show all</button>
+                </div>
+                </>
+                )}
             </main>
 
             <div className='right-section'>

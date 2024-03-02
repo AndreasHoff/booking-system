@@ -126,6 +126,7 @@ const Bookings = () => {
                 </tbody>
             </table>
             <Paginator 
+                className='paginator'
                 first={first} 
                 rows={rows} 
                 totalRecords={bookings.length} 
