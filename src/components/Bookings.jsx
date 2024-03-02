@@ -12,7 +12,7 @@ const Bookings = () => {
     const [isAnyRowExpanded, setIsAnyRowExpanded] = useState(false);
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
-    const user = useAuth(); // Use the useAuth hook to get the authentication state
+    const user = useAuth();
 
 
     useEffect(() => {
@@ -58,11 +58,10 @@ const Bookings = () => {
             status: status,
         });
     
-        console.log(`Booking ${id} status changed to ${status}`); // Log a message to the console
+        console.log(`Booking ${id} status changed to ${status}`);
     
         const change = `Booking ${id} status changed to ${status} at ${new Date().toLocaleString()}`;
 
-        // Add the entry to the 'user-trail' collection
         await addDoc(collection(db, 'activity-log', user.uid, 'booking-status-changes'), { change, timestamp: serverTimestamp() });
     
         setBookings((prevBookings) =>

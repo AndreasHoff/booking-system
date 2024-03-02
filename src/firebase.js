@@ -4,7 +4,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC3p97ZP39Y7AJxnjV0Fe-nqzUMhj1OUIw",
   authDomain: "react-booking-system-1e238.firebaseapp.com",
@@ -15,7 +14,6 @@ const firebaseConfig = {
   measurementId: "G-LGQHRM6MTG"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const analytics = getAnalytics(app);

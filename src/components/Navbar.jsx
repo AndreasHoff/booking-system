@@ -1,21 +1,21 @@
 import { signOut } from 'firebase/auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import React, { useState } from 'react'; // Added useState import
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
-import { auth, db } from '../firebase'; // assuming you have exported db from firebase.js
+import { auth, db } from '../firebase';
 import '../styles/Navbar.css';
 
 const Navbar = () => {
     const navigate = useNavigate();
-    const user = useAuth(); // Use the useAuth hook to get the authentication state
+    const user = useAuth();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const logout = async () => {
         setIsLoggingOut(true);
         try {
             await signOut(auth);
-            const change = `User logged out at ${new Date().toLocaleString()}`;
+            const change = `${user.email} logged out at ${new Date().toLocaleString()}`;
             const data = { change, timestamp: serverTimestamp() };
             await addDoc(collection(db, 'activity-log', user.uid, 'user-trails'), data);
             navigate('/login');
@@ -33,9 +33,6 @@ const Navbar = () => {
                 <li className='navbar-item'>
                     <Link to='/booking' className='navbar-link'>Booking</Link>
                 </li>
-                {/* <li className='navbar-item'>
-                    <Link to='/' className='navbar-link'>Home</Link>
-                </li> */}
                 {<li className='navbar-item'>
                     <Link to='/dashboard' className='navbar-link'>Dashboard</Link>
                 </li>}

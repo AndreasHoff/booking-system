@@ -1,10 +1,7 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-// Create a context for the authentication state
 const AuthContext = createContext();
-
-// Create a provider component for the authentication state
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
@@ -14,7 +11,6 @@ export const AuthProvider = ({ children }) => {
             setUser(currentUser);
         });
 
-        // Cleanup subscription on unmount
         return () => unsubscribe();
     }, []);
 
@@ -25,7 +21,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-// Create a hook to use the authentication state
 export const useAuth = () => {
     return useContext(AuthContext);
 };

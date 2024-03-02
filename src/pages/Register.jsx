@@ -14,7 +14,6 @@ const Register = () => {
     const register = async (e) => {
         e.preventDefault();
     
-        // Check if passwords match
         if (password !== confirmPassword) {
             setPasswordMatchError(true);
             return;
@@ -23,9 +22,7 @@ const Register = () => {
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Signed up 
             const user = userCredential.user;
-            // ...
             console.log(user)
             console.log('registration succesful');
             navigate('/dashboard');
@@ -33,7 +30,6 @@ const Register = () => {
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            // ..
             setRegistrationError(error.message);
             console.log(errorCode, errorMessage)
         });

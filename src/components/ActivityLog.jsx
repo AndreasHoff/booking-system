@@ -8,7 +8,7 @@ import '../styles/ActivityLog.css';
 const ActivityLog = () => {
     const [logs, setLogs] = useState([]);
     const [bookingStatusChanges, setBookingStatusChanges] = useState([]);
-    const user = useAuth(); // Use the useAuth hook to get the authentication state
+    const user = useAuth();
 
 
     const fetchLogs = useCallback(async () => {
@@ -50,8 +50,8 @@ const ActivityLog = () => {
             await Promise.all(deletePromises);
     
             console.log(`Deleted 'user-trails' and 'booking-status-changes' documents under document ${user.uid}`);
-            setLogs([]); // Clear the logs state
-            setBookingStatusChanges([]); // Clear the booking status changes state
+            setLogs([]);
+            setBookingStatusChanges([]); 
         } catch (error) {
             console.error("Error deleting logs: ", error);
         }
@@ -70,7 +70,7 @@ const ActivityLog = () => {
                 <h2>User Activity Logs</h2>
                 {logs.map(log => (
                     <div key={log.id} className="log-item">
-                        <h3>{log.change}</h3> {/* Replace 'title' with the actual property name */}
+                        <h3>{log.change}</h3>
                     </div>
                 ))}
             </div>
@@ -78,7 +78,7 @@ const ActivityLog = () => {
                 <h2>Booking Status Changes</h2>
                 {bookingStatusChanges.map(log => (
                     <div key={log.id} className="log-item">
-                        <h3>{log.change}</h3> {/* Replace 'title' with the actual property name */}
+                        <h3>{log.change}</h3>
                     </div>
                 ))}
             </div>

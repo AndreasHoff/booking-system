@@ -37,7 +37,7 @@ const Booking = (callback) => {
 
     const handleCategoryChange = async (category) => {
         setSelectedCategory(category);
-        setSelectedService(''); // Reset selected service when category changes
+        setSelectedService('');
         setAccordionOpen(!isAccordionOpen);
     };
 
